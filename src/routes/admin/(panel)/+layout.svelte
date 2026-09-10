@@ -1,0 +1,115 @@
+<script lang="ts">
+	import { page } from '$app/state';
+	import { localizeHref } from '#lib/paraglide/runtime';
+	import { getAdminOverview } from '#lib/remote/admin-dashboard.remote';
+	import * as m from '#lib/paraglide/messages';
+	import logo from '#lib/assets/efekt-logo.jpg';
+	import type { LayoutProps } from './$types';
+
+	let { data, children }: LayoutProps = $props();
+
+	// Derived rather than awaited once: the layout outlives every screen under it,
+	// so a snapshot would freeze the unread badge for the whole admin session.
+	const overview = $derived(await getAdminOverview());
+
+	let open = $state(false);
+
+	const links = $derived([
+		{ href: '/admin', label: m.admin_nav_dashboard(), badge: 0 },
+		{ href: '/admin/instruktorzy', label: m.admin_nav_instructors(), badge: 0 },
+		{ href: '/admin/blog', label: m.admin_nav_blog(), badge: 0 },
+		{ href: '/admin/opinie', label: m.admin_nav_opinions(), badge: 0 },
+		{ href: '/admin/kontakt', label: m.admin_nav_contact(), badge: 0 },
+		{
+			href: '/admin/wiadomosci',
+			label: m.admin_nav_messages(),
+			badge: overview.unreadMessages
+		},
+		{ href: '/admin/poczta', label: m.admin_nav_smtp(), badge: 0 }
+	]);
+
+	// Route ids carry the layout group - `/admin/(panel)/blog` - so dropping it
+	// gives the same shape as the hrefs above, whatever prefix the URL has.
+	const currentPath = $derived(page.route.id?.replace('/(panel)', '') ?? '');
+
+	const isActive = (href: string) =>
+		currentPath === href || (href !== '/admin' && currentPath.startsWith(`${href}/`));
+
+	const signOutAction = `${localizeHref('/admin/login')}?/logout`;
+</script>
+
+<div class="md:flex md:items-start">
+	<aside
+		class="flex flex-col border-red bg-navy-deep max-md:border-b-[3px] md:sticky md:top-0 md:h-screen md:w-[248px] md:shrink-0 md:border-r-[3px]"
+	>
+		<div class="flex items-center justify-between gap-4 px-5 py-4">
+			<a href={localizeHref('/admin')} onclick={() => (open = false)} class="block">
+				<img src={logo} alt={m.logo_alt()} class="block h-10 w-auto" width="135" height="40" />
+				<span class="eyebrow mt-2 block text-[0.68rem] text-paper/50">{m.admin_title()}</span>
+			</a>
+
+			<button
+				type="button"
+				onclick={() => (open = !open)}
+				aria-expanded={open}
+				aria-controls="admin-menu"
+				aria-label={open ? m.nav_close_menu() : m.nav_open_menu()}
+				class="rounded-[2px] border-2 border-paper px-[0.6rem] py-[0.3rem] text-xl leading-none text-paper md:hidden"
+			>
+				{open ? '✕' : '☰'}
+			</button>
+		</div>
+
+		<div id="admin-menu" class="flex-1 flex-col justify-between md:flex {open ? 'flex' : 'hidden'}">
+			<nav class="flex flex-col gap-px px-3 pb-4">
+				{#each links as link (link.href)}
+					{@const active = isActive(link.href)}
+					<a
+						href={localizeHref(link.href)}
+						onclick={() => (open = false)}
+						aria-current={active ? 'page' : undefined}
+						class="flex items-center justify-between gap-3 border-l-[3px] px-4 py-[0.6rem] text-[0.92rem] transition-colors
+							{active
+							? 'border-yellow bg-blue font-bold text-yellow'
+							: 'border-transparent text-paper/75 hover:border-white/25 hover:text-paper'}"
+					>
+						<span>{link.label}</span>
+						{#if link.badge > 0}
+							<span class="bg-red px-[0.4rem] py-[0.05rem] text-[0.72rem] font-bold text-paper">
+								<span aria-hidden="true">{link.badge}</span>
+								<!-- The bare digit tells a screen reader nothing, so the link's
+								     accessible name spells the count out instead. -->
+								<span class="sr-only">
+									{m.admin_messages_unread_count({ count: link.badge })}
+								</span>
+							</span>
+						{/if}
+					</a>
+				{/each}
+			</nav>
+
+			<div class="border-t border-white/10 px-5 py-5">
+				<p class="text-[0.76rem] leading-[1.5] break-words text-paper/55">
+					{m.admin_signed_in_as({ email: data.user.email })}
+				</p>
+
+				<form method="POST" action={signOutAction} class="mt-3">
+					<button type="submit" class="text-[0.82rem] text-yellow underline underline-offset-4">
+						{m.admin_sign_out()}
+					</button>
+				</form>
+
+				<a
+					href={localizeHref('/')}
+					class="mt-3 block text-[0.82rem] text-paper/55 transition-colors hover:text-paper"
+				>
+					{m.admin_back_to_site()}
+				</a>
+			</div>
+		</div>
+	</aside>
+
+	<main class="min-h-screen min-w-0 flex-1">
+		{@render children()}
+	</main>
+</div>

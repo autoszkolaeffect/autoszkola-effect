@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1789058095530,
+      "tag": "0000_organic_alice",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789066288353,
+      "tag": "0001_omniscient_skrulls",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789066293983,
+      "tag": "0002_outstanding_yellow_claw",
+      "breakpoints": true
+    }
+  ]
+}

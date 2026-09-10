@@ -1,0 +1,306 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+/* The palette and the two typefaces from docs/DESIGN.md. Everything else in the
+   app should reach for these tokens rather than repeating hex values. */
+@theme {
+	--color-navy: #001633;
+	--color-navy-deep: #000d1f;
+	--color-blue: #0a4295;
+	--color-red: #d62828;
+	--color-yellow: #f5eb18;
+	--color-orange: #f77f00;
+	--color-paper: #fafafa;
+
+	--font-display: 'Brygada 1918', Georgia, serif;
+	--font-body: 'Average Sans', Arial, sans-serif;
+
+	/* The design is square-cornered throughout; 2px is the single exception,
+	   used on nav pills and the phone button. */
+	--radius-pill: 2px;
+
+	/* `backwards`, not `both`: a forwards fill keeps the animation's final values
+	   after it ends, and an animated value outranks the element's own. With
+	   `opacity: 1` in the `to` frame that pinned every testimonial card fully
+	   opaque, so the dimmed inactive cards never dimmed. Leaving `opacity` out of
+	   the `to` frame instead makes each card animate from 0 up to whatever opacity
+	   it actually has - 1 for the active card, 0.65 for the rest. */
+	--animate-fade-slide: fade-slide 0.4s ease backwards;
+
+	@keyframes fade-slide {
+		from {
+			opacity: 0;
+			transform: translateX(32px);
+		}
+		to {
+			transform: translateX(0);
+		}
+	}
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		font-family: var(--font-body);
+		color: var(--color-paper);
+		background-color: var(--color-navy);
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-family: var(--font-display);
+	}
+
+	/* The design has no focus styling of its own. Rather than ship none, use the
+	   yellow accent so keyboard navigation stays visible against every surface. */
+	:focus-visible {
+		outline: 2px solid var(--color-yellow);
+		outline-offset: 2px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
+
+@layer components {
+	/* The 48x5 bar that sits above every section heading. Pair with a background
+	   utility for its colour: `<div class="section-rule bg-red"></div>`. */
+	.section-rule {
+		width: 48px;
+		height: 5px;
+		margin-bottom: 1.25rem;
+	}
+
+	/* Small uppercase label: eyebrows, field labels, stat captions. */
+	.eyebrow {
+		font-family: var(--font-body);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	/* Form fields on both the public contact form and the admin panel. */
+	.field {
+		width: 100%;
+		box-sizing: border-box;
+		background: var(--color-navy);
+		border: 1px solid --alpha(#fff / 20%);
+		border-radius: 0;
+		color: var(--color-paper);
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		padding: 0.75rem 1rem;
+		transition: border-color 0.15s;
+	}
+
+	/* The design marks focus with the border alone. That is enough for a pointer,
+	   but not for a keyboard, so the ring from the base layer is kept for
+	   :focus-visible - the components layer would otherwise outrank it and leave
+	   keyboard users with no indicator at all. `box-shadow: none` suppresses the
+	   ring @tailwindcss/forms adds, which does not match the design. */
+	.field:focus {
+		border-color: var(--color-yellow);
+		box-shadow: none;
+	}
+
+	.field:focus-visible {
+		outline: 2px solid var(--color-yellow);
+		outline-offset: 2px;
+	}
+
+	.field::placeholder {
+		color: --alpha(var(--color-paper) / 35%);
+	}
+
+	.field[aria-invalid='true'] {
+		border-color: var(--color-red);
+	}
+
+	textarea.field {
+		resize: vertical;
+	}
+
+	select.field {
+		cursor: pointer;
+		/* @tailwindcss/forms paints the chevron as a background image and reserves
+		   room for it with padding-right; `.field`'s shorthand padding wiped that
+		   out, so a long option ran underneath the arrow. */
+		padding-right: 2.5rem;
+	}
+
+	/* Buttons. The design uses the display serif for anything that reads as a
+	   call to action, and the body sans for navigation-like controls. */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		font-family: var(--font-display);
+		font-weight: 700;
+		border: none;
+		border-radius: 0;
+		cursor: pointer;
+		letter-spacing: 0.04em;
+		padding: 0.9rem 2rem;
+		transition:
+			background 0.15s,
+			color 0.15s,
+			border-color 0.15s;
+	}
+
+	.btn:disabled {
+		opacity: 0.55;
+		cursor: not-allowed;
+	}
+
+	.btn-red {
+		background: var(--color-red);
+		color: var(--color-paper);
+	}
+
+	.btn-red:not(:disabled):hover {
+		background: #b71f1f;
+	}
+
+	.btn-yellow {
+		background: var(--color-yellow);
+		color: var(--color-navy);
+	}
+
+	.btn-yellow:not(:disabled):hover {
+		background: #ddd414;
+	}
+
+	.btn-ghost {
+		background: transparent;
+		color: var(--color-yellow);
+		border: 2px solid var(--color-yellow);
+	}
+
+	.btn-ghost:not(:disabled):hover {
+		background: var(--color-yellow);
+		color: var(--color-navy);
+	}
+
+	/* Rendered markdown: blog articles on the public site and the editor preview
+	   in the admin panel. Mirrors the article layout in docs/DESIGN.md - gold
+	   headings, generous body leading, no images. */
+	.markdown-body > * + * {
+		margin-top: 2rem;
+	}
+
+	.markdown-body h1,
+	.markdown-body h2,
+	.markdown-body h3,
+	.markdown-body h4 {
+		font-family: var(--font-display);
+		font-weight: 700;
+		color: var(--color-yellow);
+		margin-bottom: 0.65rem;
+	}
+
+	.markdown-body h1 {
+		font-size: 1.45rem;
+	}
+
+	.markdown-body h2 {
+		font-size: 1.2rem;
+	}
+
+	.markdown-body h3 {
+		font-size: 1.05rem;
+	}
+
+	.markdown-body h4 {
+		font-size: 1rem;
+	}
+
+	.markdown-body h2 + p,
+	.markdown-body h3 + p,
+	.markdown-body h4 + p,
+	.markdown-body h1 + p {
+		margin-top: 0;
+	}
+
+	.markdown-body p,
+	.markdown-body li {
+		font-family: var(--font-body);
+		font-size: 1rem;
+		line-height: 1.78;
+		color: --alpha(var(--color-paper) / 82%);
+	}
+
+	.markdown-body ul,
+	.markdown-body ol {
+		padding-left: 1.35rem;
+	}
+
+	.markdown-body ul {
+		list-style: disc;
+	}
+
+	.markdown-body ol {
+		list-style: decimal;
+	}
+
+	.markdown-body li + li {
+		margin-top: 0.4rem;
+	}
+
+	.markdown-body li::marker {
+		color: var(--color-yellow);
+	}
+
+	.markdown-body a {
+		color: var(--color-yellow);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.markdown-body strong {
+		color: var(--color-paper);
+		font-weight: 700;
+	}
+
+	.markdown-body blockquote {
+		border-left: 3px solid var(--color-yellow);
+		padding-left: 1.25rem;
+		font-style: italic;
+	}
+
+	.markdown-body code {
+		font-size: 0.9em;
+		background: --alpha(#fff / 8%);
+		padding: 0.1em 0.35em;
+	}
+
+	.markdown-body pre {
+		background: var(--color-navy-deep);
+		border-left: 3px solid var(--color-blue);
+		padding: 1rem 1.25rem;
+		overflow-x: auto;
+	}
+
+	.markdown-body pre code {
+		background: none;
+		padding: 0;
+	}
+
+	.markdown-body hr {
+		border: none;
+		border-top: 1px solid --alpha(#fff / 12%);
+	}
+}

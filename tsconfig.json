@@ -1,0 +1,16 @@
+{
+	"extends": "$app/tsconfig",
+	"compilerOptions": {
+		// Mirrors the `imports` map in package.json. TypeScript resolves `imports`
+		// targets as exact paths (no extension/index guessing), so `#lib/*` needs
+		// a `paths` entry to resolve the same specifiers Vite already handles.
+		"paths": {
+			"#lib": ["./src/lib/index.ts"],
+			"#lib/*": ["./src/lib/*"]
+		},
+		"rewriteRelativeImportExtensions": true,
+		"sourceMap": true,
+		"strict": true
+	},
+	"include": ["src", "drizzle.config.ts"]
+}
