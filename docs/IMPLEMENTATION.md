@@ -29,9 +29,15 @@ tsconfig.json). Import without a file extension.
 One locale, `pl`, and every public URL carries it: `/pl`, `/pl/blog`,
 `/pl/admin`. Paraglide's `url` strategy does the redirecting, and `src/hooks.ts`
 de-localizes before routing - so **route folders have no `[locale]` segment**.
-`/pl/kontakt` is served by `src/routes/(site)/kontakt/+page.svelte`.
+`/pl/contact` is served by `src/routes/(site)/contact/+page.svelte`.
 
-Always build links with `localizeHref('/kontakt')`, never a bare `/kontakt`.
+Always build links with `localizeHref('/contact')`, never a bare `/contact`.
+
+Route segments and query parameters are English (`/pl/instructors`,
+`/pl/blog?category=…`, `/pl/admin/messages?filter=archived`), including the
+`new` segment the create forms sit on. Only content is Polish - blog slugs come
+from the post title and are stored per locale, so they follow the language they
+were written in rather than this rule.
 
 Adding a locale means adding it to `project.inlang/settings.json` and to
 `urlPatterns` in `paraglide.config.js`. Nothing else should need to change, which
@@ -104,12 +110,25 @@ with a `bg-*`), `.eyebrow`, `.field`, `.btn` plus `.btn-red` / `.btn-yellow` /
 
 Rules of thumb:
 
-- Square corners. The only radius in the design is `rounded-[2px]`, on nav pills.
+- Square corners. The only radius in the design is `rounded-pill` (2px), on nav pills.
 - Emphasis comes from coloured edges (`border-l-4 border-red`,
-  `border-t-[3px] border-yellow`), never shadows.
+  `border-t-3 border-yellow`), never shadows.
 - Headings use `font-display` (applied automatically to `h1`-`h4` in base CSS).
-- Arbitrary values are fine where the design is specific:
-  `text-[clamp(2rem,5vw,3.2rem)]`, `leading-[1.68]`.
+- **No arbitrary values.** There are no `[...]` utilities in the markup at all.
+  Where Tailwind's own scale has the value, use it (`max-w-275`, `border-t-3`,
+  `tracking-widest`, `leading-normal`); where it does not, the value is a theme
+  token or an `@utility` in `src/routes/layout.css` (`text-caption`,
+  `leading-body`, `px-tag`, `grid-cards`, `bg-hero-scrim`). Adding a
+  one-off size straight into a component is the thing not to do - either an
+  existing token fits, or the design has a new size that belongs in the theme.
+- **Every length is relative.** Sizes, spacing, tracking and grid wrap points are
+  all `rem` (line heights unitless, headings fluid `clamp()`), so a reader who
+  enlarges their browser font gets a layout that grows with it rather than one
+  pinned to pixels. Do not reintroduce `px` in a token.
+- A `--text-*` token has no `--line-height` companion on purpose: `text-caption`
+  sets the size alone and leaves leading to a `leading-*` utility. Tailwind's own
+  `text-sm` bundles a line-height, which is why the stock steps are not used for
+  body copy here.
 - The breakpoint between the mobile and desktop layouts is `md` (768px).
 
 ## Deliberate deviations from the design
@@ -163,9 +182,9 @@ Lives under `src/routes/admin/`:
 
 There is no sign-up. Accounts exist only because `npm run db:seed` created them.
 
-Admin URLs are Polish and locale-prefixed: `/pl/admin`, `/pl/admin/instruktorzy`,
-`/pl/admin/blog`, `/pl/admin/opinie`, `/pl/admin/kontakt`,
-`/pl/admin/wiadomosci`, `/pl/admin/poczta`.
+Admin URLs are locale-prefixed: `/pl/admin`, `/pl/admin/instructors`,
+`/pl/admin/blog`, `/pl/admin/opinions`, `/pl/admin/contact`,
+`/pl/admin/messages`, `/pl/admin/smtp`.
 
 The panel uses the same palette as the public site but a denser, plainer layout:
 navy page, `bg-blue` cards, `.field` inputs, `.btn-*` buttons. It is a working

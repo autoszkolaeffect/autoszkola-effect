@@ -23,9 +23,9 @@
 	// `id` is always present here.
 	const { params }: PageProps = $props();
 
-	// `nowy` is the placeholder segment the list links to when there is nothing
+	// `new` is the placeholder segment the list links to when there is nothing
 	// to load yet; every real post is addressed by its id.
-	const isNew = $derived(params.id === 'nowy');
+	const isNew = $derived(params.id === 'new');
 
 	// Derived rather than awaited once: SvelteKit keeps this component mounted
 	// when the route moves from one post to another, so a snapshot would leave
@@ -110,7 +110,7 @@
 
 <AdminPage title={isNew ? m.admin_blog_new() : m.admin_blog_edit()}>
 	{#snippet actions()}
-		<a href={localizeHref('/admin/blog')} class="text-[0.85rem] text-yellow">
+		<a href={localizeHref('/admin/blog')} class="text-caption text-yellow">
 			{m.admin_back_to_list()}
 		</a>
 	{/snippet}
@@ -122,7 +122,7 @@
 			<input {...fields.id.as('hidden', post?.id ?? '')} />
 
 			<AdminCard>
-				<div class="grid [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))] gap-5">
+				<div class="grid grid-fields gap-5">
 					<AdminField label={m.admin_blog_category()} issues={fields.categoryId.issues()}>
 						{#snippet children(id, aria)}
 							<select
@@ -182,7 +182,7 @@
 								<button
 									type="button"
 									onclick={recomputeReadingMinutes}
-									class="text-[0.78rem] text-yellow underline underline-offset-4"
+									class="text-hint text-yellow underline underline-offset-4"
 								>
 									{m.admin_blog_reading_minutes_auto()}
 								</button>
@@ -281,7 +281,7 @@
 				</button>
 
 				{#if saved}
-					<span class="text-[0.85rem] text-yellow" role="status">{m.admin_saved()}</span>
+					<span class="text-caption text-yellow" role="status">{m.admin_saved()}</span>
 				{/if}
 
 				{#if post}
@@ -289,7 +289,7 @@
 						type="button"
 						onclick={remove}
 						disabled={deleting}
-						class="ml-auto border-2 border-red px-5 py-2 text-[0.85rem] text-paper transition-colors hover:bg-red disabled:opacity-55"
+						class="ml-auto border-2 border-red px-5 py-2 text-caption text-paper transition-colors hover:bg-red disabled:opacity-55"
 					>
 						{deleting ? m.admin_deleting() : m.admin_delete()}
 					</button>

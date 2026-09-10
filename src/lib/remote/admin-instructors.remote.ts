@@ -232,7 +232,7 @@ export const saveInstructor = form(saveSchema, async (data, issue) => {
 	await getAdminOverview().refresh();
 	await refreshPublicInstructors();
 
-	redirect(303, localizeHref('/admin/instruktorzy', { locale: data.locale }));
+	redirect(303, localizeHref('/admin/instructors', { locale: data.locale }));
 });
 
 export const deleteInstructor = command(idArg, async (id) => {

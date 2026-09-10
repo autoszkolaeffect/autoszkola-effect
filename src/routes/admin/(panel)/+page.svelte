@@ -40,7 +40,7 @@
 
 	const cards = $derived([
 		{
-			href: '/admin/instruktorzy',
+			href: '/admin/instructors',
 			title: m.admin_nav_instructors(),
 			value: String(overview.instructors.total),
 			caption: visible(overview.instructors.published),
@@ -54,14 +54,14 @@
 			accent: 'border-yellow'
 		},
 		{
-			href: '/admin/opinie',
+			href: '/admin/opinions',
 			title: m.admin_nav_opinions(),
 			value: String(overview.opinions.total),
 			caption: visible(overview.opinions.published),
 			accent: 'border-yellow'
 		},
 		{
-			href: '/admin/wiadomosci',
+			href: '/admin/messages',
 			title: m.admin_nav_messages(),
 			value: String(overview.unreadMessages),
 			caption: overview.unreadMessages > 0 ? unreadCaption : allRead,
@@ -70,7 +70,7 @@
 			accent: overview.unreadMessages > 0 ? 'border-red' : 'border-yellow'
 		},
 		{
-			href: '/admin/poczta',
+			href: '/admin/smtp',
 			title: m.admin_nav_smtp(),
 			value: smtp.value,
 			caption: smtp.caption,
@@ -80,17 +80,17 @@
 </script>
 
 <AdminPage title={m.admin_title()} {intro}>
-	<div class="grid [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))] gap-4">
+	<div class="grid grid-columns gap-4">
 		{#each cards as card (card.href)}
 			<a
 				href={localizeHref(card.href)}
-				class="block border-t-[3px] {card.accent} bg-blue p-5 transition-colors hover:bg-blue/75"
+				class="block border-t-3 {card.accent} bg-blue p-5 transition-colors hover:bg-blue/75"
 			>
-				<h2 class="eyebrow text-[0.72rem] font-normal text-paper/60">{card.title}</h2>
-				<p class="mt-3 font-display text-[1.9rem] leading-tight font-bold break-words text-yellow">
+				<h2 class="eyebrow text-eyebrow font-normal text-paper/60">{card.title}</h2>
+				<p class="mt-3 font-display text-metric leading-tight font-bold break-words text-yellow">
 					{card.value}
 				</p>
-				<p class="mt-2 text-[0.82rem] leading-[1.55] text-paper/65">{card.caption}</p>
+				<p class="mt-2 text-meta leading-caption text-paper/65">{card.caption}</p>
 			</a>
 		{/each}
 	</div>

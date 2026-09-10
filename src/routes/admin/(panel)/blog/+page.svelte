@@ -44,10 +44,10 @@
 
 <AdminPage title={m.admin_blog_title()} intro={m.admin_blog_intro()}>
 	{#snippet actions()}
-		<a href={localizeHref('/admin/blog/kategorie')} class="btn btn-ghost px-5 py-2 text-[0.9rem]">
+		<a href={localizeHref('/admin/blog/categories')} class="btn btn-ghost px-5 py-2 text-label">
 			{m.admin_blog_categories()}
 		</a>
-		<a href={localizeHref('/admin/blog/nowy')} class="btn btn-red px-5 py-2 text-[0.9rem]">
+		<a href={localizeHref('/admin/blog/new')} class="btn btn-red px-5 py-2 text-label">
 			{m.admin_blog_new()}
 		</a>
 	{/snippet}
@@ -59,7 +59,7 @@
 			{#each groups as group (group.status)}
 				{#if group.rows.length > 0}
 					<section>
-						<h2 class="eyebrow mb-4 text-[0.72rem] font-normal text-paper/55">
+						<h2 class="eyebrow mb-4 text-eyebrow font-normal text-paper/55">
 							{group.label} · {group.rows.length}
 						</h2>
 
@@ -68,18 +68,18 @@
 								<li>
 									<a
 										href={localizeHref(`/admin/blog/${row.id}`)}
-										class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-l-[3px] bg-blue px-5 py-4 transition-colors hover:bg-blue/75 {row
+										class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-l-3 bg-blue px-5 py-4 transition-colors hover:bg-blue/75 {row
 											.accent.border}"
 									>
 										<span class="min-w-0 flex-1">
-											<span class="block font-display text-[1.05rem] font-bold text-paper">
+											<span class="block font-display text-body-lg font-bold text-paper">
 												{row.title}
 											</span>
 											{#if row.category}
 												<!-- The badge carries the category's own accent, as it does
 												     on the public blog card. -->
 												<span
-													class="eyebrow mt-2 inline-block px-[0.4rem] py-[0.1rem] text-[0.68rem] font-bold {row
+													class="eyebrow mt-2 inline-block px-chip py-sliver text-micro font-bold {row
 														.accent.solid}"
 												>
 													{row.category}
@@ -87,7 +87,7 @@
 											{/if}
 										</span>
 
-										<span class="text-[0.8rem] whitespace-nowrap text-paper/50">
+										<span class="text-note whitespace-nowrap text-paper/50">
 											{row.meta}
 										</span>
 									</a>

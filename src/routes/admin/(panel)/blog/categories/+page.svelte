@@ -55,7 +55,7 @@
 
 <AdminPage title={m.admin_blog_categories()}>
 	{#snippet actions()}
-		<a href={localizeHref('/admin/blog')} class="text-[0.85rem] text-yellow">
+		<a href={localizeHref('/admin/blog')} class="text-caption text-yellow">
 			{m.admin_back_to_list()}
 		</a>
 	{/snippet}
@@ -116,7 +116,7 @@
 			{/snippet}
 		</LocaleTabs>
 
-		<div class="grid [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))] gap-5">
+		<div class="grid grid-chips gap-5">
 			<AdminField label={m.admin_blog_category_slug()} issues={fields.slug.issues()}>
 				{#snippet children(id, aria)}
 					<input {id} {...fields.slug.as('text', category?.slug ?? '')} {...aria} class="field" />
@@ -157,10 +157,7 @@
 		</div>
 
 		{#if category && refusals[category.id]}
-			<p
-				class="border-l-[3px] border-red bg-red/20 px-3 py-2 text-[0.8rem] text-paper"
-				role="alert"
-			>
+			<p class="border-l-3 border-red bg-red/20 px-3 py-2 text-note text-paper" role="alert">
 				{refusals[category.id]}
 			</p>
 		{/if}
@@ -168,23 +165,23 @@
 		<div class="flex flex-wrap items-center gap-4">
 			<button
 				type="submit"
-				class="btn btn-red px-6 py-2 text-[0.9rem]"
+				class="btn btn-red px-6 py-2 text-label"
 				disabled={instance.pending > 0}
 			>
 				{instance.pending > 0 ? m.admin_saving() : category ? m.admin_save() : m.admin_add()}
 			</button>
 
 			{#if instance.result?.ok}
-				<span class="text-[0.85rem] text-yellow" role="status">{m.admin_saved()}</span>
+				<span class="text-caption text-yellow" role="status">{m.admin_saved()}</span>
 			{/if}
 
 			{#if category}
-				<span class="text-[0.8rem] text-paper/45">{postCount(category.posts)}</span>
+				<span class="text-note text-paper/45">{postCount(category.posts)}</span>
 
 				<button
 					type="button"
 					onclick={() => remove(category.id)}
-					class="ml-auto border-2 border-red px-4 py-[0.4rem] text-[0.82rem] text-paper transition-colors hover:bg-red"
+					class="ml-auto border-2 border-red px-4 py-chip text-meta text-paper transition-colors hover:bg-red"
 				>
 					{m.admin_delete()}
 				</button>

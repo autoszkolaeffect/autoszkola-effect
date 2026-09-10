@@ -14,7 +14,7 @@
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center px-6 py-16">
-	<div class="w-full max-w-[400px]">
+	<div class="w-full max-w-100">
 		<!-- Source is 2048x607; 162x48 preserves that ratio so the card does not
 		     shift while the image loads. -->
 		<img
@@ -25,13 +25,13 @@
 			height="48"
 		/>
 
-		<div class="border-t-[3px] border-yellow bg-blue p-8">
-			<h1 class="text-[1.5rem] font-bold text-yellow">{m.admin_login_title()}</h1>
-			<p class="mt-2 mb-7 text-[0.9rem] leading-[1.65] text-paper/70">{m.admin_login_intro()}</p>
+		<div class="border-t-3 border-yellow bg-blue p-8">
+			<h1 class="text-login font-bold text-yellow">{m.admin_login_title()}</h1>
+			<p class="mt-2 mb-7 text-label leading-card text-paper/70">{m.admin_login_intro()}</p>
 
 			{#if form?.error}
 				<p
-					class="mb-6 border-l-[3px] border-red bg-red/20 px-4 py-3 text-[0.85rem] leading-[1.5] text-paper"
+					class="mb-6 border-l-3 border-red bg-red/20 px-4 py-3 text-caption leading-normal text-paper"
 					role="alert"
 				>
 					{form.error}
@@ -54,7 +54,7 @@
 				<input type="hidden" name="redirectTo" value={data.redirectTo} />
 
 				<div class="flex flex-col gap-2">
-					<label class="eyebrow text-[0.72rem] text-paper/60" for="admin-login-email">
+					<label class="eyebrow text-eyebrow text-paper/60" for="admin-login-email">
 						{m.admin_login_email()}
 					</label>
 					<input
@@ -69,7 +69,7 @@
 				</div>
 
 				<div class="flex flex-col gap-2">
-					<label class="eyebrow text-[0.72rem] text-paper/60" for="admin-login-password">
+					<label class="eyebrow text-eyebrow text-paper/60" for="admin-login-password">
 						{m.admin_login_password()}
 					</label>
 					<input

@@ -87,10 +87,7 @@
 
 <AdminPage title={m.admin_instructors_title()} intro={m.admin_instructors_intro()}>
 	{#snippet actions()}
-		<a
-			href={localizeHref('/admin/instruktorzy/nowy')}
-			class="btn btn-yellow px-6 py-3 text-[0.9rem]"
-		>
+		<a href={localizeHref('/admin/instructors/new')} class="btn btn-yellow px-6 py-3 text-label">
 			{m.admin_instructors_new()}
 		</a>
 	{/snippet}
@@ -101,10 +98,7 @@
 		<p class="sr-only" role="status">{announcement}</p>
 
 		{#if failed}
-			<p
-				class="border-l-[3px] border-red bg-red/20 px-4 py-3 text-[0.85rem] text-paper"
-				role="alert"
-			>
+			<p class="border-l-3 border-red bg-red/20 px-4 py-3 text-caption text-paper" role="alert">
 				{m.admin_error_generic()}
 			</p>
 		{/if}
@@ -123,7 +117,7 @@
 							{@const name = translation?.name || m.admin_locale_missing()}
 
 							<li
-								class="flex flex-wrap items-center gap-4 border-l-[3px] {preview.edge} bg-blue px-4 py-3"
+								class="flex flex-wrap items-center gap-4 border-l-3 {preview.edge} bg-blue px-4 py-3"
 							>
 								<!-- A marker, not a thumbnail: the list never loads the photos
 								     themselves, only whether one is set. -->
@@ -142,17 +136,17 @@
 
 								<div class="min-w-0 flex-1 basis-40">
 									{#if translation?.name}
-										<p class="font-display text-[1.05rem] font-bold text-paper">
+										<p class="font-display text-body-lg font-bold text-paper">
 											{translation.name}
 										</p>
 									{:else}
-										<p class="font-display text-[1.05rem] text-paper/40 italic">
+										<p class="font-display text-body-lg text-paper/40 italic">
 											{m.admin_locale_missing()}
 										</p>
 									{/if}
 
 									{#if translation?.badge}
-										<p class="eyebrow mt-1 text-[0.72rem] text-paper/60">{translation.badge}</p>
+										<p class="eyebrow mt-1 text-eyebrow text-paper/60">{translation.badge}</p>
 									{/if}
 								</div>
 
@@ -161,7 +155,7 @@
 									onclick={() =>
 										run(() => setInstructorPublished({ id: row.id, published: !row.published }))}
 									aria-pressed={row.published}
-									class="eyebrow border-2 px-3 py-1 text-[0.7rem] whitespace-nowrap transition-colors
+									class="eyebrow border-2 px-3 py-1 text-mini whitespace-nowrap transition-colors
 										{row.published
 										? 'border-yellow text-yellow'
 										: 'border-white/25 text-paper/55 hover:border-white/45'}"
@@ -177,7 +171,7 @@
 										disabled={index === 0}
 										aria-label={m.admin_move_up()}
 										title={m.admin_move_up()}
-										class="border border-white/20 px-[0.6rem] py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
+										class="border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
 									>
 										↑
 									</button>
@@ -188,15 +182,15 @@
 										disabled={index === instructors.length - 1}
 										aria-label={m.admin_move_down()}
 										title={m.admin_move_down()}
-										class="border border-white/20 px-[0.6rem] py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
+										class="border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
 									>
 										↓
 									</button>
 								</div>
 
 								<a
-									href={localizeHref(`/admin/instruktorzy/${row.id}`)}
-									class="text-[0.85rem] text-yellow underline underline-offset-4"
+									href={localizeHref(`/admin/instructors/${row.id}`)}
+									class="text-caption text-yellow underline underline-offset-4"
 								>
 									{m.admin_edit()}
 								</a>

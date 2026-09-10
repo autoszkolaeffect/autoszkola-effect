@@ -28,32 +28,32 @@
 	<meta name="description" content={post.excerpt} />
 </svelte:head>
 
-<article class="mx-auto max-w-[760px] px-6 pt-12 pb-20">
-	<a href={localizeHref('/blog')} class="mb-10 inline-block text-[0.9rem] text-yellow">
+<article class="mx-auto max-w-190 px-6 pt-12 pb-20">
+	<a href={localizeHref('/blog')} class="mb-10 inline-block text-label text-yellow">
 		{m.blog_back()}
 	</a>
 
 	{#if post.categoryLabel}
 		<p
-			class="mb-5 inline-block px-3 py-[0.3rem] text-[0.75rem] font-bold tracking-[0.12em] uppercase {accent.solid}"
+			class="mb-5 inline-block px-3 py-snug text-badge font-bold tracking-badge uppercase {accent.solid}"
 		>
 			{post.categoryLabel}
 		</p>
 	{/if}
 
-	<h1 class="mb-4 text-[clamp(1.7rem,4vw,2.5rem)] leading-[1.2] font-bold text-paper">
+	<h1 class="mb-4 text-article leading-title font-bold text-paper">
 		{post.title}
 	</h1>
 
-	<div class="mb-10 flex flex-wrap gap-6 text-[0.85rem] text-paper/45">
+	<div class="mb-10 flex flex-wrap gap-6 text-caption text-paper/45">
 		<span>{formatLongDate(post.publishedAt)}</span>
 		<span>{m.blog_reading_time_long({ minutes: post.readingMinutes })}</span>
 	</div>
 
-	<div class="mb-10 h-[3px] w-full {accent.bg}"></div>
+	<div class="mb-10 h-0.75 w-full {accent.bg}"></div>
 
 	{#if post.excerpt}
-		<p class="mb-10 text-[1.05rem] leading-[1.75] text-paper/75 italic">{post.excerpt}</p>
+		<p class="mb-10 text-body-lg leading-quote text-paper/75 italic">{post.excerpt}</p>
 	{/if}
 
 	<!-- Rendered server-side by markdown-it with `html: false` (see src/lib/markdown.ts),

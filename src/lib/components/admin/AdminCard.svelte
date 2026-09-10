@@ -6,7 +6,7 @@
 
 <section class="bg-blue p-6">
 	{#if title}
-		<h2 class="mb-5 text-[1.05rem] font-bold text-yellow">{title}</h2>
+		<h2 class="mb-5 text-body-lg font-bold text-yellow">{title}</h2>
 	{/if}
 
 	{@render children()}

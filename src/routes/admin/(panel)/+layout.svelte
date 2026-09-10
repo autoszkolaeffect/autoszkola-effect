@@ -16,16 +16,16 @@
 
 	const links = $derived([
 		{ href: '/admin', label: m.admin_nav_dashboard(), badge: 0 },
-		{ href: '/admin/instruktorzy', label: m.admin_nav_instructors(), badge: 0 },
+		{ href: '/admin/instructors', label: m.admin_nav_instructors(), badge: 0 },
 		{ href: '/admin/blog', label: m.admin_nav_blog(), badge: 0 },
-		{ href: '/admin/opinie', label: m.admin_nav_opinions(), badge: 0 },
-		{ href: '/admin/kontakt', label: m.admin_nav_contact(), badge: 0 },
+		{ href: '/admin/opinions', label: m.admin_nav_opinions(), badge: 0 },
+		{ href: '/admin/contact', label: m.admin_nav_contact(), badge: 0 },
 		{
-			href: '/admin/wiadomosci',
+			href: '/admin/messages',
 			label: m.admin_nav_messages(),
 			badge: overview.unreadMessages
 		},
-		{ href: '/admin/poczta', label: m.admin_nav_smtp(), badge: 0 }
+		{ href: '/admin/smtp', label: m.admin_nav_smtp(), badge: 0 }
 	]);
 
 	// Route ids carry the layout group - `/admin/(panel)/blog` - so dropping it
@@ -40,12 +40,12 @@
 
 <div class="md:flex md:items-start">
 	<aside
-		class="flex flex-col border-red bg-navy-deep max-md:border-b-[3px] md:sticky md:top-0 md:h-screen md:w-[248px] md:shrink-0 md:border-r-[3px]"
+		class="flex flex-col border-red bg-navy-deep max-md:border-b-3 md:sticky md:top-0 md:h-screen md:w-62 md:shrink-0 md:border-r-3"
 	>
 		<div class="flex items-center justify-between gap-4 px-5 py-4">
 			<a href={localizeHref('/admin')} onclick={() => (open = false)} class="block">
 				<img src={logo} alt={m.logo_alt()} class="block h-10 w-auto" width="135" height="40" />
-				<span class="eyebrow mt-2 block text-[0.68rem] text-paper/50">{m.admin_title()}</span>
+				<span class="eyebrow mt-2 block text-micro text-paper/50">{m.admin_title()}</span>
 			</a>
 
 			<button
@@ -54,7 +54,7 @@
 				aria-expanded={open}
 				aria-controls="admin-menu"
 				aria-label={open ? m.nav_close_menu() : m.nav_open_menu()}
-				class="rounded-[2px] border-2 border-paper px-[0.6rem] py-[0.3rem] text-xl leading-none text-paper md:hidden"
+				class="rounded-pill border-2 border-paper px-tag py-snug text-xl leading-none text-paper md:hidden"
 			>
 				{open ? '✕' : '☰'}
 			</button>
@@ -68,14 +68,14 @@
 						href={localizeHref(link.href)}
 						onclick={() => (open = false)}
 						aria-current={active ? 'page' : undefined}
-						class="flex items-center justify-between gap-3 border-l-[3px] px-4 py-[0.6rem] text-[0.92rem] transition-colors
+						class="flex items-center justify-between gap-3 border-l-3 px-4 py-tag text-body-sm transition-colors
 							{active
 							? 'border-yellow bg-blue font-bold text-yellow'
 							: 'border-transparent text-paper/75 hover:border-white/25 hover:text-paper'}"
 					>
 						<span>{link.label}</span>
 						{#if link.badge > 0}
-							<span class="bg-red px-[0.4rem] py-[0.05rem] text-[0.72rem] font-bold text-paper">
+							<span class="bg-red px-chip py-hairline text-eyebrow font-bold text-paper">
 								<span aria-hidden="true">{link.badge}</span>
 								<!-- The bare digit tells a screen reader nothing, so the link's
 								     accessible name spells the count out instead. -->
@@ -89,19 +89,19 @@
 			</nav>
 
 			<div class="border-t border-white/10 px-5 py-5">
-				<p class="text-[0.76rem] leading-[1.5] break-words text-paper/55">
+				<p class="text-byline leading-normal wrap-break-word text-paper/55">
 					{m.admin_signed_in_as({ email: data.user.email })}
 				</p>
 
 				<form method="POST" action={signOutAction} class="mt-3">
-					<button type="submit" class="text-[0.82rem] text-yellow underline underline-offset-4">
+					<button type="submit" class="text-meta text-yellow underline underline-offset-4">
 						{m.admin_sign_out()}
 					</button>
 				</form>
 
 				<a
 					href={localizeHref('/')}
-					class="mt-3 block text-[0.82rem] text-paper/55 transition-colors hover:text-paper"
+					class="mt-3 block text-meta text-paper/55 transition-colors hover:text-paper"
 				>
 					{m.admin_back_to_site()}
 				</a>

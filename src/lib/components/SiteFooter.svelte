@@ -9,9 +9,9 @@
 
 	const links = [
 		{ href: '/', label: m.nav_home() },
-		{ href: '/instruktorzy', label: m.nav_instructors() },
+		{ href: '/instructors', label: m.nav_instructors() },
 		{ href: '/blog', label: m.nav_blog() },
-		{ href: '/kontakt', label: m.nav_contact() }
+		{ href: '/contact', label: m.nav_contact() }
 	];
 
 	// Rendered on the server, so this is the deploy year rather than the
@@ -19,17 +19,15 @@
 	const year = new Date().getFullYear();
 </script>
 
-<footer class="border-t-[3px] border-blue bg-navy-deep px-6 pt-12 pb-8">
-	<div
-		class="mx-auto mb-10 grid max-w-[1100px] grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-10"
-	>
+<footer class="border-t-3 border-blue bg-navy-deep px-6 pt-12 pb-8">
+	<div class="mx-auto mb-10 grid max-w-275 grid-columns gap-10">
 		<div>
 			<img src={logo} alt={m.logo_alt()} class="mb-4 block h-11 w-auto" width="148" height="44" />
-			<p class="text-[0.88rem] leading-[1.7] text-paper/55">{m.footer_blurb()}</p>
+			<p class="text-excerpt leading-body text-paper/55">{m.footer_blurb()}</p>
 		</div>
 
 		<div>
-			<h2 class="mb-4 font-display text-[0.9rem] font-bold tracking-widest text-yellow uppercase">
+			<h2 class="mb-4 font-display text-label font-bold tracking-widest text-yellow uppercase">
 				{m.footer_nav_heading()}
 			</h2>
 			<ul>
@@ -37,7 +35,7 @@
 					<li>
 						<a
 							href={localizeHref(link.href)}
-							class="block py-1 text-[0.9rem] text-paper/60 transition-colors hover:text-yellow"
+							class="block py-1 text-label text-paper/60 transition-colors hover:text-yellow"
 						>
 							{link.label}
 						</a>
@@ -47,10 +45,10 @@
 		</div>
 
 		<div>
-			<h2 class="mb-4 font-display text-[0.9rem] font-bold tracking-[0.1em] text-yellow uppercase">
+			<h2 class="mb-4 font-display text-label font-bold tracking-widest text-yellow uppercase">
 				{m.footer_contact_heading()}
 			</h2>
-			<div class="text-[0.88rem] leading-[2] text-paper/60">
+			<div class="text-excerpt leading-loose text-paper/60">
 				{#if contact.footerAddress}
 					<p>{contact.footerAddress}</p>
 				{/if}
@@ -68,9 +66,7 @@
 		</div>
 	</div>
 
-	<div
-		class="mx-auto max-w-[1100px] border-t border-white/8 pt-6 text-center text-[0.8rem] text-paper/35"
-	>
+	<div class="mx-auto max-w-275 border-t border-white/8 pt-6 text-center text-note text-paper/35">
 		{m.footer_copyright({ year })}
 	</div>
 </footer>

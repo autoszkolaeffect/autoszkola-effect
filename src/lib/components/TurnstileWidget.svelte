@@ -134,7 +134,7 @@
 	<div bind:this={container}></div>
 
 	{#if status === 'loading'}
-		<p class="text-[0.8rem] text-paper/50">{m.contact_form_captcha_loading()}</p>
+		<p class="text-note text-paper/50">{m.contact_form_captcha_loading()}</p>
 	{/if}
 
 	<input {...field.as('hidden', token)} />

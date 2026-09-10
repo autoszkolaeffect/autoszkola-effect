@@ -64,19 +64,19 @@
 			<label class="flex items-start gap-3">
 				<input
 					{...fields.enabled.as('checkbox', smtp.enabled)}
-					class="mt-[0.15rem] size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0"
+					class="mt-nudge size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0"
 				/>
-				<span class="text-[0.95rem] leading-[1.5] text-paper">{m.admin_smtp_enabled()}</span>
+				<span class="text-body leading-normal text-paper">{m.admin_smtp_enabled()}</span>
 			</label>
 
-			<p class="mt-3 text-[0.82rem] leading-[1.65] text-paper/55">
+			<p class="mt-3 text-meta leading-card text-paper/55">
 				{m.admin_smtp_disabled_hint()}
 			</p>
 		</AdminCard>
 
 		<AdminCard title={serverSection}>
 			<div class="flex flex-col gap-5">
-				<div class="grid [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))] gap-5">
+				<div class="grid grid-fields gap-5">
 					<AdminField label={m.admin_smtp_host()} issues={fields.host.issues()}>
 						{#snippet children(id, aria)}
 							<input
@@ -112,17 +112,17 @@
 					<label class="flex items-start gap-3">
 						<input
 							{...fields.secure.as('checkbox', smtp.secure)}
-							class="mt-[0.15rem] size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0"
+							class="mt-nudge size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0"
 						/>
-						<span class="text-[0.95rem] leading-[1.5] text-paper">{m.admin_smtp_secure()}</span>
+						<span class="text-body leading-normal text-paper">{m.admin_smtp_secure()}</span>
 					</label>
 
-					<p class="mt-3 text-[0.82rem] leading-[1.65] text-paper/55">
+					<p class="mt-3 text-meta leading-card text-paper/55">
 						{m.admin_smtp_secure_hint()}
 					</p>
 				</div>
 
-				<div class="grid [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))] gap-5">
+				<div class="grid grid-fields-wide gap-5">
 					<AdminField label={m.admin_smtp_username()} issues={fields.username.issues()}>
 						{#snippet children(id, aria)}
 							<input
@@ -160,7 +160,7 @@
 
 		<AdminCard title={senderSection}>
 			<div class="flex flex-col gap-5">
-				<div class="grid [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))] gap-5">
+				<div class="grid grid-fields-wide gap-5">
 					<AdminField label={m.admin_smtp_from_name()} issues={fields.fromName.issues()}>
 						{#snippet children(id, aria)}
 							<input {id} {...fields.fromName.as('text', smtp.fromName)} {...aria} class="field" />
@@ -202,7 +202,7 @@
 			</button>
 
 			{#if saved}
-				<p class="text-[0.85rem] font-bold text-yellow" role="status">{m.admin_saved()}</p>
+				<p class="text-caption font-bold text-yellow" role="status">{m.admin_saved()}</p>
 			{/if}
 		</div>
 	</form>
@@ -222,21 +222,21 @@
 				</button>
 
 				{#if !smtp.canTest}
-					<p class="text-[0.82rem] leading-[1.65] text-paper/55">{testNeedsSave}</p>
+					<p class="text-meta leading-card text-paper/55">{testNeedsSave}</p>
 				{/if}
 			</div>
 
 			{#if testResult}
 				{#if testResult.ok}
 					<p
-						class="mt-5 border-l-[3px] border-yellow bg-navy px-4 py-3 text-[0.85rem] leading-[1.6] text-paper"
+						class="mt-5 border-l-3 border-yellow bg-navy px-4 py-3 text-caption leading-hint text-paper"
 						role="status"
 					>
 						{m.admin_smtp_test_ok({ address: smtp.toAddress })}
 					</p>
 				{:else}
 					<p
-						class="mt-5 border-l-[3px] border-red bg-red/20 px-4 py-3 text-[0.85rem] leading-[1.6] text-paper"
+						class="mt-5 border-l-3 border-red bg-red/20 px-4 py-3 text-caption leading-hint text-paper"
 						role="alert"
 					>
 						{m.admin_smtp_test_failed({ error: testResult.error })}

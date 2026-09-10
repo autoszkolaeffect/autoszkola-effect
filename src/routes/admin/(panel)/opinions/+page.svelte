@@ -76,10 +76,7 @@
 
 	<div class="flex flex-col gap-5">
 		{#if failed}
-			<p
-				class="border-l-[3px] border-red bg-red/20 px-4 py-3 text-[0.85rem] text-paper"
-				role="alert"
-			>
+			<p class="border-l-3 border-red bg-red/20 px-4 py-3 text-caption text-paper" role="alert">
 				{m.admin_error_generic()}
 			</p>
 		{/if}
@@ -127,9 +124,7 @@
 			<input {...fields.id.as('hidden', row.id)} />
 
 			{#each fields.issues() ?? [] as issue, position (position)}
-				<p
-					class="border-l-[3px] border-red bg-red/20 px-3 py-2 text-[0.8rem] leading-[1.5] text-paper"
-				>
+				<p class="border-l-3 border-red bg-red/20 px-3 py-2 text-note leading-normal text-paper">
 					{issue.message}
 				</p>
 			{/each}
@@ -140,7 +135,7 @@
 					{@const text = fields.translations[indexOfLocale(locale)]}
 					{@const rating = chosenRating(fields.rating.value(), row.rating)}
 
-					<div class="grid gap-6 lg:grid-cols-[1fr_280px]">
+					<div class="grid gap-6 lg:grid-editor">
 						<div class="flex min-w-0 flex-col gap-4">
 							<AdminField
 								label={m.admin_opinions_author()}
@@ -166,19 +161,19 @@
 
 						<!-- The card as the home page draws it - docs/DESIGN.md 3.4. -->
 						<div>
-							<p class="eyebrow mb-2 text-[0.72rem] text-paper/50">{m.admin_opinions_preview()}</p>
+							<p class="eyebrow mb-2 text-eyebrow text-paper/50">{m.admin_opinions_preview()}</p>
 
-							<figure class="border-t-[3px] border-yellow bg-navy p-7">
+							<figure class="border-t-3 border-yellow bg-navy p-7">
 								<span
-									class="text-[1.1rem] tracking-[2px] text-yellow"
+									class="text-lead tracking-stars text-yellow"
 									aria-label={m.opinions_rating({ rating })}
 								>
 									{'★'.repeat(rating)}
 								</span>
-								<blockquote class="mt-3 mb-4 text-[0.95rem] leading-[1.7] text-paper/85 italic">
+								<blockquote class="mt-3 mb-4 text-body leading-body text-paper/85 italic">
 									{typed(text.quote.value(), stored.quote)}
 								</blockquote>
-								<figcaption class="font-display text-[0.9rem] font-bold text-yellow">
+								<figcaption class="font-display text-label font-bold text-yellow">
 									- {typed(text.author.value(), stored.author)}
 								</figcaption>
 							</figure>
@@ -208,7 +203,7 @@
 						</AdminField>
 					</div>
 
-					<label class="flex items-center gap-2 pb-[0.7rem] text-[0.88rem] text-paper/80">
+					<label class="flex items-center gap-2 pb-cozy text-excerpt text-paper/80">
 						<input
 							class="size-4 rounded-none border-white/25 bg-navy text-yellow"
 							{...fields.published.as('checkbox', row.published)}
@@ -219,14 +214,10 @@
 
 				<div class="flex flex-wrap items-center gap-3">
 					{#if saved}
-						<span class="text-[0.82rem] text-yellow" role="status">{m.admin_saved()}</span>
+						<span class="text-meta text-yellow" role="status">{m.admin_saved()}</span>
 					{/if}
 
-					<button
-						type="submit"
-						class="btn btn-yellow px-6 py-[0.6rem] text-[0.9rem]"
-						disabled={pending}
-					>
+					<button type="submit" class="btn btn-yellow px-6 py-tag text-label" disabled={pending}>
 						{pending ? m.admin_saving() : m.admin_save()}
 					</button>
 
@@ -254,7 +245,7 @@
 
 						<button
 							type="button"
-							class="border-2 border-red px-4 py-[0.5rem] text-[0.82rem] font-bold text-paper transition-colors hover:bg-red disabled:opacity-55"
+							class="border-2 border-red px-4 py-2 text-meta font-bold text-paper transition-colors hover:bg-red disabled:opacity-55"
 							disabled={deleteOpinion.pending > 0}
 							onclick={() => remove(row.id)}
 						>

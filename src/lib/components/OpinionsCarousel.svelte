@@ -57,25 +57,25 @@
 	onfocusin={() => (interacting = true)}
 	onfocusout={() => (interacting = false)}
 >
-	<div class="grid [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))] gap-5">
+	<div class="grid grid-quotes gap-5">
 		{#each visible as item (item.id)}
 			{@const active = item.offset === 0}
 			<figure
-				class="animate-fade-slide border-t-[3px] p-7 transition-opacity duration-300
+				class="animate-fade-slide border-t-3 p-7 transition-opacity duration-300
 					{active ? 'border-t-yellow bg-navy opacity-100' : 'border-t-yellow/35 bg-navy/55 opacity-65'}"
 			>
 				<span
-					class="text-[1.1rem] tracking-[2px] text-yellow"
+					class="text-lead tracking-stars text-yellow"
 					aria-label={m.opinions_rating({ rating: item.rating })}
 				>
 					{'★'.repeat(item.rating)}
 				</span>
-				<blockquote class="mt-3 mb-4 text-[0.95rem] leading-[1.7] text-paper/85 italic">
+				<blockquote class="mt-3 mb-4 text-body leading-body text-paper/85 italic">
 					{item.quote}
 				</blockquote>
 				<!-- The dash belongs to the design, not to the data: the admin panel's own
 				     hint asks for the name without one. See IMPLEMENTATION.md. -->
-				<figcaption class="font-display text-[0.9rem] font-bold text-yellow">
+				<figcaption class="font-display text-label font-bold text-yellow">
 					- {item.author}
 				</figcaption>
 			</figure>
@@ -90,7 +90,7 @@
 				type="button"
 				onclick={() => go(start - 1)}
 				aria-label={m.opinions_previous()}
-				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-[1.1rem] text-yellow transition-colors hover:border-yellow"
+				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-lead text-yellow transition-colors hover:border-yellow"
 			>
 				‹
 			</button>
@@ -113,7 +113,7 @@
 				type="button"
 				onclick={() => go(start + 1)}
 				aria-label={m.opinions_next()}
-				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-[1.1rem] text-yellow transition-colors hover:border-yellow"
+				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-lead text-yellow transition-colors hover:border-yellow"
 			>
 				›
 			</button>
@@ -123,7 +123,7 @@
 					type="button"
 					onclick={() => (paused = !paused)}
 					aria-label={paused ? m.opinions_resume() : m.opinions_pause()}
-					class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-[0.9rem] text-yellow transition-colors hover:border-yellow"
+					class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-label text-yellow transition-colors hover:border-yellow"
 				>
 					<!-- U+FE0E keeps the play glyph a text character instead of an emoji. -->
 					{paused ? '▶︎' : '❚❚'}

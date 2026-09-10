@@ -1,4 +1,9 @@
 @import 'tailwindcss';
+
+/* Tailwind scans the whole project for anything class-shaped, which means a
+   utility quoted as an example in docs/*.md would generate real CSS. The docs
+   describe the conventions rather than use them, so they are not a source. */
+@source not '../../docs';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
@@ -39,6 +44,149 @@
 	}
 }
 
+/* The design's own type, leading, tracking and fine-spacing scales, from
+   docs/DESIGN.md. They live here as theme tokens so the markup names the role a
+   value plays instead of repeating the number: `text-caption`, not
+   `text-[0.85rem]`. Tailwind's stock scale cannot hold these - the design uses
+   22 font sizes where Tailwind ships 13 steps, and nine of its headings are
+   fluid `clamp()` values Tailwind has no class for at all - so snapping to the
+   built-in steps would shift type by up to 10% and flatten the fluid headings
+   into fixed ones. Defining the scale keeps every value exact.
+
+   A `--text-*` token deliberately has no `--line-height` companion: that makes
+   `text-caption` set font-size alone, the way the arbitrary value it replaced
+   did, leaving leading to the `leading-*` utilities. */
+@theme {
+	/* Fluid headings. Names follow the "Recurring type scale" in DESIGN.md. */
+	--text-hero: clamp(2.4rem, 6vw, 4.2rem);
+	--text-page: clamp(2rem, 5vw, 3.2rem);
+	--text-section: clamp(1.8rem, 4vw, 2.6rem);
+	--text-cta: clamp(1.6rem, 4vw, 2.4rem);
+	--text-article: clamp(1.7rem, 4vw, 2.5rem);
+	--text-stat: clamp(2rem, 4vw, 2.8rem);
+	--text-admin-title: clamp(1.5rem, 3vw, 2rem);
+	--text-error-title: clamp(1.5rem, 4vw, 2.2rem);
+	--text-error-code: clamp(3rem, 10vw, 5rem);
+
+	/* Fixed sizes, smallest first. */
+	--text-micro: 0.68rem;
+	--text-mini: 0.7rem;
+	--text-eyebrow: 0.72rem;
+	--text-badge: 0.75rem;
+	--text-byline: 0.76rem;
+	--text-hint: 0.78rem;
+	--text-note: 0.8rem;
+	--text-meta: 0.82rem;
+	--text-caption: 0.85rem;
+	--text-excerpt: 0.88rem;
+	--text-label: 0.9rem;
+	--text-body-sm: 0.92rem;
+	--text-body: 0.95rem;
+	--text-body-lg: 1.05rem;
+	--text-lead: 1.1rem;
+	--text-lead-lg: 1.15rem;
+	--text-subheading: 1.2rem;
+	--text-person: 1.35rem;
+	--text-panel: 1.4rem;
+	--text-login: 1.5rem;
+	--text-metric: 1.9rem;
+	--text-icon: 2rem;
+
+	/* Line heights, tightest first. */
+	--leading-hero: 1.1;
+	--leading-title: 1.2;
+	--leading-heading: 1.35;
+	--leading-caption: 1.55;
+	--leading-hint: 1.6;
+	--leading-card: 1.65;
+	--leading-bio: 1.68;
+	--leading-body: 1.7;
+	--leading-quote: 1.75;
+	--leading-address: 1.8;
+
+	/* Letter spacing. `--tracking-eyebrow` matches the `.eyebrow` component
+	   class, for the places that need the spacing without the rest of it. */
+	--tracking-button: 0.04em;
+	--tracking-eyebrow: 0.08em;
+	--tracking-badge: 0.12em;
+	--tracking-hero-badge: 0.15em;
+	--tracking-stars: 0.125rem;
+
+	/* The design pads small badges and pills in steps finer than the 0.25rem
+	   spacing scale, so those steps are named here. */
+	--spacing-hairline: 0.05rem;
+	--spacing-sliver: 0.1rem;
+	--spacing-nudge: 0.15rem;
+	--spacing-snug: 0.3rem;
+	--spacing-tight: 0.35rem;
+	--spacing-chip: 0.4rem;
+	--spacing-tag: 0.6rem;
+	--spacing-cozy: 0.7rem;
+	--spacing-roomy: 0.85rem;
+}
+
+/* Gradients, grid tracks and object positions have no theme namespace, so they
+   become real utilities instead. Same reason as the tokens above: the markup
+   should say what the thing is. */
+@utility bg-hero-scrim {
+	background-image: linear-gradient(
+		rgba(0, 22, 51, 0.82) 0%,
+		rgba(0, 22, 51, 0.75) 60%,
+		rgba(0, 22, 51, 0.92) 100%
+	);
+}
+
+/* The red/yellow/orange band under the nav, in hard stops. */
+@utility bg-flag-stripe {
+	background-image: linear-gradient(to right, #d62828 33%, #f5eb18 33%, #f5eb18 66%, #f77f00 66%);
+}
+
+@utility bg-photo-scrim {
+	background-image: linear-gradient(transparent, rgba(0, 22, 51, 0.9));
+}
+
+@utility object-hero {
+	object-position: center 55%;
+}
+
+/* Card grids. `min(…, 100%)` lets the track collapse below its own minimum
+   rather than pushing the page sideways on a 20rem screen. */
+@utility grid-cards {
+	grid-template-columns: repeat(auto-fit, minmax(min(18.75rem, 100%), 1fr));
+}
+
+@utility grid-posts {
+	grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+}
+
+@utility grid-quotes {
+	grid-template-columns: repeat(auto-fit, minmax(16.25rem, 1fr));
+}
+
+@utility grid-columns {
+	grid-template-columns: repeat(auto-fit, minmax(13.75rem, 1fr));
+}
+
+@utility grid-fields {
+	grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+}
+
+@utility grid-fields-wide {
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+@utility grid-chips {
+	grid-template-columns: repeat(auto-fit, minmax(11.25rem, 1fr));
+}
+
+@utility grid-editor {
+	grid-template-columns: 1fr 17.5rem;
+}
+
+@utility grid-editor-aside {
+	grid-template-columns: 18.75rem 1fr;
+}
+
 @layer base {
 	html {
 		scroll-behavior: smooth;
@@ -60,8 +208,8 @@
 	/* The design has no focus styling of its own. Rather than ship none, use the
 	   yellow accent so keyboard navigation stays visible against every surface. */
 	:focus-visible {
-		outline: 2px solid var(--color-yellow);
-		outline-offset: 2px;
+		outline: 0.125rem solid var(--color-yellow);
+		outline-offset: 0.125rem;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
@@ -117,8 +265,8 @@
 	}
 
 	.field:focus-visible {
-		outline: 2px solid var(--color-yellow);
-		outline-offset: 2px;
+		outline: 0.125rem solid var(--color-yellow);
+		outline-offset: 0.125rem;
 	}
 
 	.field::placeholder {
@@ -187,7 +335,7 @@
 	.btn-ghost {
 		background: transparent;
 		color: var(--color-yellow);
-		border: 2px solid var(--color-yellow);
+		border: 0.125rem solid var(--color-yellow);
 	}
 
 	.btn-ghost:not(:disabled):hover {

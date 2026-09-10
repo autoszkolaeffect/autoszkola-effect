@@ -42,12 +42,12 @@
 </script>
 
 <div class="flex flex-col gap-2">
-	<label class="eyebrow text-[0.72rem] text-paper/60" for={id}>{label}</label>
+	<label class="eyebrow text-eyebrow text-paper/60" for={id}>{label}</label>
 
 	{@render children(id, aria)}
 
 	{#if hint}
-		<p id={hintId} class="text-[0.78rem] leading-[1.6] text-paper/55">{hint}</p>
+		<p id={hintId} class="text-hint leading-hint text-paper/55">{hint}</p>
 	{/if}
 
 	{#if hasIssues && issues}
@@ -56,9 +56,7 @@
 			     on a red-tinted strip with a red edge - the same "emphasis by
 			     coloured edge" the rest of the design uses. -->
 			{#each issues as issue, index (index)}
-				<li
-					class="border-l-[3px] border-red bg-red/20 px-3 py-2 text-[0.8rem] leading-[1.5] text-paper"
-				>
+				<li class="border-l-3 border-red bg-red/20 px-3 py-2 text-note leading-normal text-paper">
 					{issue.message}
 				</li>
 			{/each}

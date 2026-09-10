@@ -20,8 +20,8 @@
 	// `id` is always present here.
 	const { params }: PageProps = $props();
 
-	// `/admin/instruktorzy/nowy` is the create form; anything else is a row's id.
-	const isNew = $derived(params.id === 'nowy');
+	// `/admin/instructors/new` is the create form; anything else is a row's id.
+	const isNew = $derived(params.id === 'new');
 
 	// Derived rather than awaited once, so moving between two instructors re-reads
 	// instead of keeping the first one on screen. `error` returns `never`, which
@@ -94,15 +94,15 @@
 		if (!current || !confirm(m.admin_delete_confirm())) return;
 
 		await deleteInstructor(current.id);
-		await goto(localizeHref('/admin/instruktorzy'));
+		await goto(localizeHref('/admin/instructors'));
 	}
 </script>
 
 <AdminPage title={isNew ? m.admin_instructors_new() : m.admin_instructors_edit()}>
 	{#snippet actions()}
 		<a
-			href={localizeHref('/admin/instruktorzy')}
-			class="text-[0.85rem] text-paper/65 transition-colors hover:text-paper"
+			href={localizeHref('/admin/instructors')}
+			class="text-caption text-paper/65 transition-colors hover:text-paper"
 		>
 			{m.admin_back_to_list()}
 		</a>
@@ -121,7 +121,7 @@
 		<input {...fields.locale.as('hidden', getLocale())} />
 		<input {...fields.photo.as('hidden', photo)} />
 
-		<div class="grid items-start gap-6 md:grid-cols-[300px_1fr]">
+		<div class="grid items-start gap-6 md:grid-editor-aside">
 			<AdminCard>
 				<AdminField
 					label={m.admin_instructors_photo()}
@@ -140,7 +140,7 @@
 								/>
 							{:else}
 								<p
-									class="flex aspect-square w-full items-center justify-center border border-dashed border-white/20 text-center text-[0.8rem] text-paper/45"
+									class="flex aspect-square w-full items-center justify-center border border-dashed border-white/20 text-center text-note text-paper/45"
 								>
 									{m.admin_instructors_photo_missing()}
 								</p>
@@ -164,7 +164,7 @@
 								type="button"
 								aria-label={photoAction}
 								onclick={() => fileInput?.click()}
-								class="btn btn-ghost py-3 text-[0.85rem]"
+								class="btn btn-ghost py-3 text-caption"
 							>
 								{photoAction}
 							</button>
@@ -176,7 +176,7 @@
 										picked = '';
 										photoError = '';
 									}}
-									class="text-[0.82rem] text-yellow underline underline-offset-4"
+									class="text-meta text-yellow underline underline-offset-4"
 								>
 									{m.admin_instructors_photo_remove()}
 								</button>
@@ -277,7 +277,7 @@
 		</div>
 
 		<div class="flex flex-wrap items-center justify-between gap-4">
-			<label class="flex cursor-pointer items-center gap-3 text-[0.9rem] text-paper/85">
+			<label class="flex cursor-pointer items-center gap-3 text-label text-paper/85">
 				<input
 					{...fields.published.as('checkbox', instructor?.published ?? true)}
 					class="size-4 border-white/25 bg-navy text-yellow"
@@ -291,7 +291,7 @@
 						type="button"
 						onclick={remove}
 						disabled={removing}
-						class="border-2 border-red px-6 py-3 font-display text-[0.9rem] font-bold tracking-[0.04em] text-paper transition-colors hover:bg-red disabled:cursor-not-allowed disabled:opacity-55"
+						class="border-2 border-red px-6 py-3 font-display text-label font-bold tracking-button text-paper transition-colors hover:bg-red disabled:cursor-not-allowed disabled:opacity-55"
 					>
 						{removing ? m.admin_deleting() : m.admin_delete()}
 					</button>

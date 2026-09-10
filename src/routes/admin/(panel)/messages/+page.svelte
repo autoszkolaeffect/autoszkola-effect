@@ -8,17 +8,18 @@
 	import { formatDateTime } from '#lib/format';
 	import * as m from '#lib/paraglide/messages';
 
-	// Polish query parameter and values, for the same reason the admin routes are Polish.
-	const FILTER_PARAM = 'filtr';
+	const FILTER_PARAM = 'filter';
 
-	const tabs: { value: MessageFilter; param: string; label: string }[] = [
-		{ value: 'unread', param: 'nieprzeczytane', label: m.admin_messages_unread() },
-		{ value: 'all', param: 'wszystkie', label: m.admin_messages_all() },
-		{ value: 'archived', param: 'archiwum', label: m.admin_messages_archived() }
+	// The filter's own name is the query value, so the URL and `MessageFilter`
+	// cannot drift apart.
+	const tabs: { value: MessageFilter; label: string }[] = [
+		{ value: 'unread', label: m.admin_messages_unread() },
+		{ value: 'all', label: m.admin_messages_all() },
+		{ value: 'archived', label: m.admin_messages_archived() }
 	];
 
 	function filterFromParam(param: string | null): MessageFilter {
-		return tabs.find((tab) => tab.param === param)?.value ?? 'unread';
+		return tabs.find((tab) => tab.value === param)?.value ?? 'unread';
 	}
 
 	// The URL is the only source of truth for the active tab, so opening a message
@@ -33,8 +34,8 @@
 	function tabHref(tab: (typeof tabs)[number]): string {
 		const path =
 			tab.value === 'unread'
-				? '/admin/wiadomosci'
-				: `/admin/wiadomosci?${FILTER_PARAM}=${encodeURIComponent(tab.param)}`;
+				? '/admin/messages'
+				: `/admin/messages?${FILTER_PARAM}=${encodeURIComponent(tab.value)}`;
 
 		return localizeHref(path);
 	}
@@ -55,7 +56,7 @@
 				href={tabHref(tab)}
 				data-sveltekit-reset="false"
 				aria-current={on ? 'page' : undefined}
-				class="flex items-center gap-2 border-2 px-4 py-[0.4rem] text-[0.85rem] transition-colors duration-150
+				class="flex items-center gap-2 border-2 px-4 py-chip text-caption transition-colors duration-150
 					{on
 					? 'border-yellow bg-yellow font-bold text-navy'
 					: 'border-white/25 bg-transparent font-normal text-paper/70 hover:text-paper'}"
@@ -64,7 +65,7 @@
 
 				{#if tab.value === 'unread' && unread > 0}
 					<span
-						class="px-[0.35rem] text-[0.72rem] font-bold {on
+						class="px-tight text-eyebrow font-bold {on
 							? 'bg-navy text-yellow'
 							: 'bg-red text-paper'}"
 					>
@@ -87,8 +88,8 @@
 					     ones still waiting for an answer are the ones that read as
 					     present on the page. -->
 					<a
-						href={localizeHref(`/admin/wiadomosci/${message.id}`)}
-						class="block border-l-[3px] px-5 py-4 transition-colors
+						href={localizeHref(`/admin/messages/${message.id}`)}
+						class="block border-l-3 px-5 py-4 transition-colors
 							{isUnread ? 'border-yellow bg-blue' : 'border-transparent bg-blue/50 opacity-70 hover:opacity-100'}"
 					>
 						<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -100,22 +101,22 @@
 								{message.name}
 							</span>
 
-							<span class="text-[0.78rem] text-paper/50">
+							<span class="text-hint text-paper/50">
 								{formatDateTime(message.createdAt)}
 							</span>
 						</div>
 
-						<div class="mt-1 flex flex-wrap items-center gap-x-3 text-[0.8rem] text-paper/60">
+						<div class="mt-1 flex flex-wrap items-center gap-x-3 text-note text-paper/60">
 							<span class="break-all">{message.email}</span>
 
 							{#if message.course}
-								<span class="eyebrow border border-white/20 px-2 text-[0.68rem] text-paper/70">
+								<span class="eyebrow border border-white/20 px-2 text-micro text-paper/70">
 									{message.course}
 								</span>
 							{/if}
 						</div>
 
-						<p class="mt-2 line-clamp-2 text-[0.85rem] leading-[1.6] text-paper/70">
+						<p class="mt-2 line-clamp-2 text-caption leading-hint text-paper/70">
 							{message.preview}
 						</p>
 					</a>

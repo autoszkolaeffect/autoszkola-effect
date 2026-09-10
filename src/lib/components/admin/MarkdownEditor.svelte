@@ -67,7 +67,7 @@
 	     there - the field stays a plain textarea, so the form is still editable
 	     and still submits. Bound, so anything typed in the moment before carta
 	     takes over carries into it. -->
-	<textarea {name} {id} {placeholder} bind:value rows="18" class="field font-mono text-[0.9rem]"
+	<textarea {name} {id} {placeholder} bind:value rows="18" class="field font-mono text-label"
 	></textarea>
 {/if}
 

@@ -137,10 +137,10 @@
 	}
 
 	const rowButton =
-		'border-2 border-white/25 px-[0.6rem] py-1 text-[0.9rem] leading-none text-paper/75 transition-colors hover:border-white/50 hover:text-paper disabled:opacity-35';
+		'border-2 border-white/25 px-tag py-1 text-label leading-none text-paper/75 transition-colors hover:border-white/50 hover:text-paper disabled:opacity-35';
 	const dangerButton =
-		'border-2 border-red px-3 py-1 text-[0.82rem] leading-none text-paper transition-colors hover:bg-red';
-	const rowSubmit = 'btn btn-red px-5 py-2 text-[0.85rem]';
+		'border-2 border-red px-3 py-1 text-meta leading-none text-paper transition-colors hover:bg-red';
+	const rowSubmit = 'btn btn-red px-5 py-2 text-caption';
 </script>
 
 <AdminPage title={m.admin_contact_title()} intro={m.admin_contact_intro()}>
@@ -207,7 +207,7 @@
 					</AdminField>
 
 					<div>
-						<p class="eyebrow mb-2 text-[0.72rem] text-paper/60">{m.admin_contact_map_preview()}</p>
+						<p class="eyebrow mb-2 text-eyebrow text-paper/60">{m.admin_contact_map_preview()}</p>
 
 						{#if mapPreview}
 							<div class="overflow-hidden border-2 border-navy">
@@ -216,7 +216,7 @@
 									title={m.admin_contact_map_preview()}
 									loading="lazy"
 									referrerpolicy="no-referrer-when-downgrade"
-									class="block aspect-[16/9] w-full border-0"
+									class="block aspect-video w-full border-0"
 								></iframe>
 							</div>
 						{:else}
@@ -232,7 +232,7 @@
 				</button>
 
 				{#if saveContactSettings.result?.saved}
-					<p class="text-[0.85rem] text-yellow" role="status">{m.admin_saved()}</p>
+					<p class="text-caption text-yellow" role="status">{m.admin_saved()}</p>
 				{/if}
 			</div>
 		</form>
@@ -251,7 +251,7 @@
 						     and which row is primary travels as the hidden field of the row
 						     being saved. -->
 						<fieldset class="min-w-0">
-							<legend class="eyebrow mb-3 text-[0.72rem] text-paper/60">
+							<legend class="eyebrow mb-3 text-eyebrow text-paper/60">
 								{m.admin_contact_phone_primary()}
 							</legend>
 
@@ -259,8 +259,8 @@
 								{#each contact.phones as phone, index (phone.id)}
 									{@const row = savePhone.for(phone.id)}
 									{@const isPrimary = primaryPhoneId === phone.id}
-									<div class="border-l-[3px] border-red bg-navy p-4">
-										<label class="mb-4 flex items-center gap-2 text-[0.85rem] text-paper/75">
+									<div class="border-l-3 border-red bg-navy p-4">
+										<label class="mb-4 flex items-center gap-2 text-caption text-paper/75">
 											<input
 												type="radio"
 												name="primary-phone"
@@ -375,7 +375,7 @@
 
 		<!-- Course options -------------------------------------------------->
 		<AdminCard title={m.admin_contact_courses()}>
-			<p class="mb-5 text-[0.85rem] leading-[1.6] text-paper/65">
+			<p class="mb-5 text-caption leading-hint text-paper/65">
 				{m.admin_contact_courses_intro()}
 			</p>
 
@@ -385,7 +385,7 @@
 					<div class="flex flex-col gap-3">
 						{#each contact.courses as course, index (course.id)}
 							{@const row = saveCourseOption.for(course.id)}
-							<form {...row} class="border-l-[3px] border-yellow bg-navy p-4">
+							<form {...row} class="border-l-3 border-yellow bg-navy p-4">
 								<input {...row.fields.id.as('hidden', course.id)} />
 
 								<div class="grid gap-4 md:grid-cols-2">

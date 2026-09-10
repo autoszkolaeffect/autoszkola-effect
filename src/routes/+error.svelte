@@ -21,15 +21,15 @@
 
 	<div class="section-rule mx-auto bg-red"></div>
 
-	<p class="mb-3 font-display text-[clamp(3rem,10vw,5rem)] leading-none font-bold text-yellow">
+	<p class="mb-3 font-display text-error-code leading-none font-bold text-yellow">
 		{page.status}
 	</p>
 
-	<h1 class="mb-4 text-[clamp(1.5rem,4vw,2.2rem)] font-bold text-paper">
+	<h1 class="mb-4 text-error-title font-bold text-paper">
 		{notFound ? m.error_404_title() : m.error_title()}
 	</h1>
 
-	<p class="mb-10 max-w-[480px] text-paper/70">
+	<p class="mb-10 max-w-120 text-paper/70">
 		{notFound ? m.error_404_body() : m.error_generic_body()}
 	</p>
 

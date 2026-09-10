@@ -55,7 +55,7 @@
 
 		await run(async () => {
 			await deleteMessage(message.id);
-			await goto(localizeHref('/admin/wiadomosci'));
+			await goto(localizeHref('/admin/messages'));
 		});
 	}
 
@@ -103,7 +103,7 @@
 
 <AdminPage title={message.name}>
 	{#snippet actions()}
-		<a href={localizeHref('/admin/wiadomosci')} class="text-[0.85rem] text-yellow">
+		<a href={localizeHref('/admin/messages')} class="text-caption text-yellow">
 			{m.admin_back_to_list()}
 		</a>
 
@@ -111,7 +111,7 @@
 			type="button"
 			disabled={busy}
 			onclick={() => run(() => markMessageRead({ id: message.id, read: message.readAt === null }))}
-			class="btn btn-ghost px-4 py-2 text-[0.85rem]"
+			class="btn btn-ghost px-4 py-2 text-caption"
 		>
 			{message.readAt ? m.admin_messages_mark_unread() : m.admin_messages_mark_read()}
 		</button>
@@ -121,7 +121,7 @@
 			disabled={busy}
 			onclick={() =>
 				run(() => archiveMessage({ id: message.id, archived: message.archivedAt === null }))}
-			class="btn btn-ghost px-4 py-2 text-[0.85rem]"
+			class="btn btn-ghost px-4 py-2 text-caption"
 		>
 			{message.archivedAt ? m.admin_messages_unarchive() : m.admin_messages_archive()}
 		</button>
@@ -130,7 +130,7 @@
 			type="button"
 			disabled={busy}
 			onclick={remove}
-			class="btn btn-red px-4 py-2 text-[0.85rem]"
+			class="btn btn-red px-4 py-2 text-caption"
 		>
 			{deleteMessage.pending > 0 ? m.admin_deleting() : m.admin_delete()}
 		</button>
@@ -138,23 +138,20 @@
 
 	<div class="flex flex-col gap-6">
 		{#if failed}
-			<p
-				class="border-l-[3px] border-red bg-red/20 px-4 py-3 text-[0.85rem] text-paper"
-				role="alert"
-			>
+			<p class="border-l-3 border-red bg-red/20 px-4 py-3 text-caption text-paper" role="alert">
 				{m.admin_error_generic()}
 			</p>
 		{/if}
 
 		<AdminCard>
-			<dl class="grid [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))] gap-x-6 gap-y-5">
+			<dl class="grid grid-fields gap-x-6 gap-y-5">
 				<div class="min-w-0">
-					<dt class="eyebrow text-[0.72rem] text-paper/60">{m.admin_messages_from()}</dt>
-					<dd class="mt-1 text-[0.95rem] text-paper">
+					<dt class="eyebrow text-eyebrow text-paper/60">{m.admin_messages_from()}</dt>
+					<dd class="mt-1 text-body text-paper">
 						{message.name}
 						<a
 							href="mailto:{message.email}"
-							class="mt-1 block text-[0.9rem] break-all text-yellow underline underline-offset-[3px]"
+							class="mt-1 block text-label break-all text-yellow underline underline-offset-3"
 						>
 							{message.email}
 						</a>
@@ -162,15 +159,15 @@
 				</div>
 
 				<div class="min-w-0">
-					<dt class="eyebrow text-[0.72rem] text-paper/60">{m.admin_messages_received()}</dt>
-					<dd class="mt-1 text-[0.95rem] text-paper">{formatDateTime(message.createdAt)}</dd>
+					<dt class="eyebrow text-eyebrow text-paper/60">{m.admin_messages_received()}</dt>
+					<dd class="mt-1 text-body text-paper">{formatDateTime(message.createdAt)}</dd>
 				</div>
 
 				{#if message.phone}
 					<div class="min-w-0">
-						<dt class="eyebrow text-[0.72rem] text-paper/60">{phoneLabel}</dt>
-						<dd class="mt-1 text-[0.95rem]">
-							<a href={telHref(message.phone)} class="text-yellow underline underline-offset-[3px]">
+						<dt class="eyebrow text-eyebrow text-paper/60">{phoneLabel}</dt>
+						<dd class="mt-1 text-body">
+							<a href={telHref(message.phone)} class="text-yellow underline underline-offset-3">
 								{message.phone}
 							</a>
 						</dd>
@@ -179,8 +176,8 @@
 
 				{#if message.course}
 					<div class="min-w-0">
-						<dt class="eyebrow text-[0.72rem] text-paper/60">{m.admin_messages_course()}</dt>
-						<dd class="mt-1 text-[0.95rem] break-words text-paper">{message.course}</dd>
+						<dt class="eyebrow text-eyebrow text-paper/60">{m.admin_messages_course()}</dt>
+						<dd class="mt-1 text-body break-words text-paper">{message.course}</dd>
 					</div>
 				{/if}
 			</dl>
@@ -189,22 +186,22 @@
 		<AdminCard title={bodyLabel}>
 			<!-- Written by an anonymous visitor, so it is rendered as text and never
 			     as markup. `whitespace-pre-wrap` keeps the paragraphs they typed. -->
-			<p class="text-[0.95rem] leading-[1.75] break-words whitespace-pre-wrap text-paper/85">
+			<p class="text-body leading-quote break-words whitespace-pre-wrap text-paper/85">
 				{message.message}
 			</p>
 
-			<a href={replyHref} class="btn btn-yellow mt-6 px-5 py-3 text-[0.9rem]">
+			<a href={replyHref} class="btn btn-yellow mt-6 px-5 py-3 text-label">
 				{m.admin_messages_reply()}
 			</a>
 		</AdminCard>
 
 		<AdminCard title={m.admin_messages_notification()}>
-			<p class="inline-block border-l-[3px] px-3 py-2 text-[0.85rem] font-bold {notification.tone}">
+			<p class="inline-block border-l-3 px-3 py-2 text-caption font-bold {notification.tone}">
 				{notification.label}
 			</p>
 
 			{#if message.notificationSentAt}
-				<p class="mt-3 text-[0.82rem] text-paper/60">
+				<p class="mt-3 text-meta text-paper/60">
 					{notificationSentAtLabel}: {formatDateTime(message.notificationSentAt)}
 				</p>
 			{/if}
@@ -213,27 +210,27 @@
 				<!-- The raw SMTP error, verbatim: it is the only thing that says why
 				     the mail did not go out. -->
 				<pre
-					class="mt-4 overflow-x-auto border-l-[3px] border-red bg-navy p-4 font-mono text-[0.78rem] leading-[1.6] whitespace-pre-wrap text-paper/75">{message.notificationError}</pre>
+					class="mt-4 overflow-x-auto border-l-3 border-red bg-navy p-4 font-mono text-hint leading-hint whitespace-pre-wrap text-paper/75">{message.notificationError}</pre>
 			{/if}
 		</AdminCard>
 
 		<AdminCard title={technicalLabel}>
-			<dl class="grid [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))] gap-x-6 gap-y-5">
+			<dl class="grid grid-fields gap-x-6 gap-y-5">
 				<div class="min-w-0">
-					<dt class="eyebrow text-[0.72rem] text-paper/60">{localeLabel}</dt>
-					<dd class="mt-1 text-[0.85rem] text-paper/75">{message.locale}</dd>
+					<dt class="eyebrow text-eyebrow text-paper/60">{localeLabel}</dt>
+					<dd class="mt-1 text-caption text-paper/75">{message.locale}</dd>
 				</div>
 
 				<div class="min-w-0">
-					<dt class="eyebrow text-[0.72rem] text-paper/60">{ipLabel}</dt>
-					<dd class="mt-1 font-mono text-[0.8rem] break-all text-paper/75">
+					<dt class="eyebrow text-eyebrow text-paper/60">{ipLabel}</dt>
+					<dd class="mt-1 font-mono text-note break-all text-paper/75">
 						{message.ipAddress ?? unknown}
 					</dd>
 				</div>
 
 				<div class="min-w-0">
-					<dt class="eyebrow text-[0.72rem] text-paper/60">{userAgentLabel}</dt>
-					<dd class="mt-1 font-mono text-[0.8rem] break-all text-paper/75">
+					<dt class="eyebrow text-eyebrow text-paper/60">{userAgentLabel}</dt>
+					<dd class="mt-1 font-mono text-note break-all text-paper/75">
 						{message.userAgent ?? unknown}
 					</dd>
 				</div>

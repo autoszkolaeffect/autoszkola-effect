@@ -18,7 +18,7 @@
 				role="tab"
 				aria-selected={selected}
 				onclick={() => (active = locale)}
-				class="eyebrow -mb-px border-b-[3px] px-4 py-2 text-[0.75rem] transition-colors
+				class="eyebrow -mb-px border-b-3 px-4 py-2 text-badge transition-colors
 					{selected
 					? 'border-yellow font-bold text-yellow'
 					: 'border-transparent text-paper/60 hover:text-paper'}"
