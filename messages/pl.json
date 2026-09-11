@@ -22,7 +22,7 @@
 	"hero_lead_before": "Urząd Miasta Łodzi opublikował ranking oparty na danych łódzkiego WORD za pierwsze trzy kwartały 2022 r. Auto Szkoła Efekt zajęła ",
 	"hero_lead_highlight": "1. miejsce z wynikiem 46,30%",
 	"hero_lead_after": " - najlepszym spośród wszystkich szkół jazdy w mieście.",
-	"hero_cta_primary": "Zapisz się na kurs →",
+	"hero_cta_primary": "Zapisz się na kurs",
 	"hero_cta_secondary": "Poznaj instruktorów",
 	"hero_photo_alt": "Samochód szkoleniowy Auto Szkoły Efekt",
 
@@ -57,7 +57,7 @@
 
 	"home_cta_heading": "Gotowy, żeby zdać za pierwszym razem?",
 	"home_cta_body": "Zadzwoń lub wypełnij formularz - odpowiadamy w ciągu 24 godzin.",
-	"home_cta_button": "Kontakt i zapisy →",
+	"home_cta_button": "Kontakt i zapisy",
 
 	"footer_blurb": "Lider rynku szkół jazdy w Łodzi od ponad 20 lat. Najwyższa zdawalność potwierdzona rankingiem WORD 2023.",
 	"footer_nav_heading": "Nawigacja",
@@ -72,10 +72,10 @@
 	"blog_title": "Blog",
 	"blog_intro": "Praktyczne porady od naszych instruktorów - kruczki egzaminu praktycznego, newralgiczne miejsca w Łodzi i omówienie tematów z teorii.",
 	"blog_filter_all": "Wszystkie",
-	"blog_read_more": "Czytaj →",
+	"blog_read_more": "Czytaj",
 	"blog_reading_time": "{minutes} min",
 	"blog_reading_time_long": "{minutes} min czytania",
-	"blog_back": "← Wróć do bloga",
+	"blog_back": "Wróć do bloga",
 	"blog_empty": "Nie ma jeszcze żadnych wpisów. Zajrzyj tu wkrótce.",
 	"blog_empty_in_category": "W tej kategorii nie ma jeszcze wpisów.",
 
@@ -90,7 +90,7 @@
 	"contact_form_course_label": "Interesuje mnie kurs",
 	"contact_form_message_label": "Wiadomość *",
 	"contact_form_message_placeholder": "Napisz, kiedy chcesz zacząć kurs i czy masz jakieś pytania...",
-	"contact_form_submit": "Wyślij wiadomość →",
+	"contact_form_submit": "Wyślij wiadomość",
 	"contact_form_sending": "Wysyłanie...",
 	"contact_form_success_title": "Dziękujemy za wiadomość!",
 	"contact_form_success_body": "Odezwiemy się na podany adres w ciągu 24 godzin. Jeśli sprawa jest pilna, zadzwoń pod {phone}.",
@@ -121,7 +121,7 @@
 	"admin_login_throttled": "Zbyt wiele prób logowania. Odczekaj kilka minut i spróbuj ponownie.",
 	"admin_signed_in_as": "Zalogowano jako {email}",
 	"admin_sign_out": "Wyloguj się",
-	"admin_back_to_site": "← Wróć na stronę",
+	"admin_back_to_site": "Wróć na stronę",
 
 	"admin_nav_instructors": "Instruktorzy",
 	"admin_nav_blog": "Blog",
@@ -139,7 +139,7 @@
 	"admin_delete_confirm": "Na pewno usunąć? Tej operacji nie da się cofnąć.",
 	"admin_add": "Dodaj",
 	"admin_edit": "Edytuj",
-	"admin_back_to_list": "← Wróć do listy",
+	"admin_back_to_list": "Wróć do listy",
 	"admin_move_up": "Przesuń wyżej",
 	"admin_move_down": "Przesuń niżej",
 	"admin_status_published": "Opublikowany",
@@ -154,7 +154,7 @@
 	"admin_sort_order": "Kolejność",
 
 	"admin_instructors_title": "Instruktorzy",
-	"admin_instructors_intro": "Kolejność na liście odpowiada kolejności na stronie. Kolor akcentu każdej karty wynika z jej pozycji.",
+	"admin_instructors_intro": "Kolejność na liście odpowiada kolejności na stronie. Kolor akcentu każdej karty wynika z jej pozycji, chyba że wybierzesz własny.",
 	"admin_instructors_new": "Nowy instruktor",
 	"admin_instructors_edit": "Edytuj instruktora",
 	"admin_instructors_empty": "Nie dodano jeszcze żadnego instruktora.",
@@ -173,6 +173,12 @@
 	"admin_instructors_experience": "Staż",
 	"admin_instructors_experience_hint": "Na przykład: 14 lat doświadczenia",
 	"admin_instructors_bio": "Opis",
+	"admin_instructors_accent": "Kolor akcentu",
+	"admin_instructors_accent_hint": "Kolor etykiety na zdjęciu i paska pod kartą. Bez wybranego koloru karta dobiera go automatycznie według swojej pozycji.",
+	"admin_instructors_accent_auto": "Automatyczny (wg pozycji)",
+	"admin_instructors_accent_reset": "Przywróć automatyczny",
+	"admin_instructors_accent_invalid": "Nieprawidłowy kolor.",
+	"admin_instructors_accent_contrast": "Tekst na tym kolorze będzie słabo czytelny. Wybierz jaśniejszy lub ciemniejszy odcień.",
 
 	"admin_blog_title": "Blog",
 	"admin_blog_intro": "Wpisy w wersji roboczej nie są widoczne na stronie.",
@@ -216,6 +222,7 @@
 	"admin_opinions_author_hint": "Na przykład: Marta K.",
 	"admin_opinions_quote": "Treść opinii",
 	"admin_opinions_rating": "Ocena (gwiazdki)",
+	"admin_opinions_rating_hint": "Od 0 do 5, co pół gwiazdki.",
 
 	"admin_contact_title": "Dane kontaktowe",
 	"admin_contact_intro": "Wszystko, co widać w zakładce „Kontakt” i w stopce strony.",

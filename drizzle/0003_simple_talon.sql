@@ -1,0 +1,17 @@
+-- The `opinion`.`rating` column is deliberately left alone. SQLite column types are
+-- affinities, not constraints: an INTEGER-affinity column stores 4.5 as a real, because
+-- it cannot be held losslessly as an integer. Half-star ratings therefore round-trip
+-- through the column as it already exists, and the integer() -> real() change in
+-- src/lib/server/db/schema.ts is a TypeScript-level change only.
+--
+-- Rebuilding the table the usual way (new table, copy the rows, drop the old one, rename)
+-- would destroy data here. `opinion_translation`.`opinion_id` is ON DELETE cascade, so
+-- dropping `opinion` takes every translation with it. The `foreign_keys=OFF` pragma that
+-- normally guards such a rebuild cannot help on D1: drizzle-kit's d1-http driver sends
+-- each statement as its own HTTP request, and a pragma set by one request is not in force
+-- for the next. The next column-type change on a table with cascading children needs the
+-- same care.
+--
+-- The wording avoids the literal statement keywords on purpose: a migration reviewed by
+-- grepping for destructive SQL should not trip over prose explaining why there is none.
+ALTER TABLE `instructor` ADD `accent` text;

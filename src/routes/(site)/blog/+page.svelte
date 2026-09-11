@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ArrowRight } from '@lucide/svelte';
 	import { page } from '$app/state';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import { listBlogCategories, listBlogPosts } from '#lib/remote/site.remote';
@@ -123,8 +124,11 @@
 								minutes: post.readingMinutes
 							})}
 						</span>
-						<span class="font-display text-caption font-bold text-yellow">
+						<span
+							class="inline-flex items-center gap-1 font-display text-caption font-bold text-yellow"
+						>
 							{m.blog_read_more()}
+							<ArrowRight class="size-4" aria-hidden="true" />
 						</span>
 					</div>
 				</a>

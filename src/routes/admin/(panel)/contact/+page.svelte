@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ArrowDown, ArrowUp } from '@lucide/svelte';
 	import {
 		deleteCourseOption,
 		deletePhone,
@@ -137,7 +138,7 @@
 	}
 
 	const rowButton =
-		'border-2 border-white/25 px-tag py-1 text-label leading-none text-paper/75 transition-colors hover:border-white/50 hover:text-paper disabled:opacity-35';
+		'inline-flex items-center justify-center border-2 border-white/25 px-tag py-1 text-label leading-none text-paper/75 transition-colors hover:border-white/50 hover:text-paper disabled:opacity-35';
 	const dangerButton =
 		'border-2 border-red px-3 py-1 text-meta leading-none text-paper transition-colors hover:bg-red';
 	const rowSubmit = 'btn btn-red px-5 py-2 text-caption';
@@ -314,7 +315,7 @@
 													aria-label={m.admin_move_up()}
 													class={rowButton}
 												>
-													↑
+													<ArrowUp class="size-4" aria-hidden="true" />
 												</button>
 												<button
 													type="button"
@@ -323,7 +324,7 @@
 													aria-label={m.admin_move_down()}
 													class={rowButton}
 												>
-													↓
+													<ArrowDown class="size-4" aria-hidden="true" />
 												</button>
 												<button
 													type="button"
@@ -427,7 +428,7 @@
 										aria-label={m.admin_move_up()}
 										class={rowButton}
 									>
-										↑
+										<ArrowUp class="size-4" aria-hidden="true" />
 									</button>
 									<button
 										type="button"
@@ -436,7 +437,7 @@
 										aria-label={m.admin_move_down()}
 										class={rowButton}
 									>
-										↓
+										<ArrowDown class="size-4" aria-hidden="true" />
 									</button>
 									<button
 										type="button"

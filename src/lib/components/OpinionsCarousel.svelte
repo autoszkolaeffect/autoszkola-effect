@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { ChevronLeft, ChevronRight, Pause, Play } from '@lucide/svelte';
+	import Stars from '#lib/components/Stars.svelte';
 	import * as m from '#lib/paraglide/messages';
 	import type { PublicOpinion } from '#lib/remote/site.remote';
 
@@ -64,12 +66,7 @@
 				class="animate-fade-slide border-t-3 p-7 transition-opacity duration-300
 					{active ? 'border-t-yellow bg-navy opacity-100' : 'border-t-yellow/35 bg-navy/55 opacity-65'}"
 			>
-				<span
-					class="text-lead tracking-stars text-yellow"
-					aria-label={m.opinions_rating({ rating: item.rating })}
-				>
-					{'★'.repeat(item.rating)}
-				</span>
+				<Stars rating={item.rating} />
 				<blockquote class="mt-3 mb-4 text-body leading-body text-paper/85 italic">
 					{item.quote}
 				</blockquote>
@@ -90,9 +87,9 @@
 				type="button"
 				onclick={() => go(start - 1)}
 				aria-label={m.opinions_previous()}
-				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-lead text-yellow transition-colors hover:border-yellow"
+				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-yellow transition-colors hover:border-yellow"
 			>
-				‹
+				<ChevronLeft class="size-5" aria-hidden="true" />
 			</button>
 
 			<div class="flex gap-2">
@@ -113,9 +110,9 @@
 				type="button"
 				onclick={() => go(start + 1)}
 				aria-label={m.opinions_next()}
-				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-lead text-yellow transition-colors hover:border-yellow"
+				class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-yellow transition-colors hover:border-yellow"
 			>
-				›
+				<ChevronRight class="size-5" aria-hidden="true" />
 			</button>
 
 			{#if rotates}
@@ -123,10 +120,15 @@
 					type="button"
 					onclick={() => (paused = !paused)}
 					aria-label={paused ? m.opinions_resume() : m.opinions_pause()}
-					class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-label text-yellow transition-colors hover:border-yellow"
+					class="flex h-10 w-10 items-center justify-center border-2 border-yellow/60 text-yellow transition-colors hover:border-yellow"
 				>
-					<!-- U+FE0E keeps the play glyph a text character instead of an emoji. -->
-					{paused ? '▶︎' : '❚❚'}
+					{#if paused}
+						<!-- Filled, because the hollow triangle reads much lighter than the
+						     pause bars, which their outlines all but fill at this size. -->
+						<Play class="size-4" fill="currentColor" aria-hidden="true" />
+					{:else}
+						<Pause class="size-4" aria-hidden="true" />
+					{/if}
 				</button>
 			{/if}
 		</div>

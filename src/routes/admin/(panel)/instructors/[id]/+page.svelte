@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ArrowLeft } from '@lucide/svelte';
 	import { error } from '@sveltejs/kit';
 	import { goto } from '$app/navigation';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
@@ -6,6 +7,7 @@
 	import {
 		deleteInstructor,
 		getInstructorForAdmin,
+		listInstructorsForAdmin,
 		saveInstructor
 	} from '#lib/remote/admin-instructors.remote';
 	import AdminPage from '#lib/components/admin/AdminPage.svelte';
@@ -13,6 +15,7 @@
 	import AdminField from '#lib/components/admin/AdminField.svelte';
 	import LocaleTabs from '#lib/components/admin/LocaleTabs.svelte';
 	import { MAX_PHOTO_BYTES, downscalePhoto, photoByteLength } from '#lib/photo';
+	import { accentForeground, accentMeetsAA, instructorAccentHex, isAccentHex } from '#lib/accents';
 	import * as m from '#lib/paraglide/messages';
 	import type { PageProps } from './$types';
 
@@ -58,6 +61,41 @@
 		...(photoError ? [{ message: photoError }] : [])
 	]);
 
+	// The same three states the photo has, for the same reason: `null` while the
+	// control is untouched, a hex once one is chosen, and `''` for a colour put
+	// back to automatic - which `null` cannot say, because the stored colour
+	// would show through it again.
+	let pickedAccent = $state<string | null>(null);
+
+	const accent = $derived(pickedAccent ?? instructor?.accent ?? '');
+
+	// What "automatic" currently means. An existing instructor is handed the
+	// colour of its own position by the query; a new one is not in the grid yet,
+	// but `saveInstructor` puts it at the end, so the colour it will take there is
+	// the one after however many published instructors it lines up behind. The
+	// list is only fetched on that branch - the edit path already knows.
+	const autoAccent = $derived(
+		instructor
+			? instructor.autoAccent
+			: instructorAccentHex(
+					null,
+					(await listInstructorsForAdmin()).filter((row) => row.published).length
+				)
+	);
+
+	// A colour input has no way to display "unset", so on automatic it shows the
+	// colour the card takes without one - the line under it is what says the
+	// accent is automatic rather than that particular hex. A stored value CSS
+	// would reject falls here too; it stays in the field, where saving flags it,
+	// instead of being silently swallowed by the picker.
+	const swatch = $derived(isAccentHex(accent) ? accent : autoAccent);
+
+	// Only a colour chosen by hand can miss AA: on automatic the card takes one of
+	// the four palette colours and all four clear it. No guard for that is needed
+	// here, because `accentMeetsAA` also passes anything that is not a usable hex,
+	// which is exactly when the picker is showing `autoAccent` instead.
+	const accentBelowAA = $derived(!accentMeetsAA(accent));
+
 	async function choosePhoto(input: HTMLInputElement) {
 		const file = input.files?.[0];
 		// Cleared so that picking the same file again still fires a change event.
@@ -102,8 +140,9 @@
 	{#snippet actions()}
 		<a
 			href={localizeHref('/admin/instructors')}
-			class="text-caption text-paper/65 transition-colors hover:text-paper"
+			class="inline-flex items-center gap-1 text-caption text-paper/65 transition-colors hover:text-paper"
 		>
+			<ArrowLeft class="size-4" aria-hidden="true" />
 			{m.admin_back_to_list()}
 		</a>
 	{/snippet}
@@ -120,70 +159,144 @@
 		<input {...fields.id.as('hidden', instructor?.id ?? '')} />
 		<input {...fields.locale.as('hidden', getLocale())} />
 		<input {...fields.photo.as('hidden', photo)} />
+		<input {...fields.accent.as('hidden', accent)} />
 
 		<div class="grid items-start gap-6 md:grid-editor-aside">
 			<AdminCard>
-				<AdminField
-					label={m.admin_instructors_photo()}
-					hint={m.admin_instructors_photo_hint()}
-					issues={photoIssues}
-				>
-					{#snippet children(id, aria)}
-						<div class="flex flex-col gap-3">
-							{#if photo}
-								<img
-									src={photo}
-									alt=""
-									width="300"
-									height="300"
-									class="block aspect-square w-full object-cover"
+				<div class="flex flex-col gap-5">
+					<AdminField
+						label={m.admin_instructors_photo()}
+						hint={m.admin_instructors_photo_hint()}
+						issues={photoIssues}
+					>
+						{#snippet children(id, aria)}
+							<div class="flex flex-col gap-3">
+								{#if photo}
+									<img
+										src={photo}
+										alt=""
+										width="300"
+										height="300"
+										class="block aspect-square w-full object-cover"
+									/>
+								{:else}
+									<p
+										class="flex aspect-square w-full items-center justify-center border border-dashed border-white/20 text-center text-note text-paper/45"
+									>
+										{m.admin_instructors_photo_missing()}
+									</p>
+								{/if}
+
+								<input
+									bind:this={fileInput}
+									type="file"
+									accept="image/*"
+									tabindex={-1}
+									aria-hidden="true"
+									class="sr-only"
+									onchange={(event) => choosePhoto(event.currentTarget)}
 								/>
-							{:else}
-								<p
-									class="flex aspect-square w-full items-center justify-center border border-dashed border-white/20 text-center text-note text-paper/45"
-								>
-									{m.admin_instructors_photo_missing()}
-								</p>
-							{/if}
-
-							<input
-								bind:this={fileInput}
-								type="file"
-								accept="image/*"
-								tabindex={-1}
-								aria-hidden="true"
-								class="sr-only"
-								onchange={(event) => choosePhoto(event.currentTarget)}
-							/>
-							<!-- Named explicitly: the field's own `<label for>` would otherwise
-							     take over the accessible name, leaving voice control with no way
-							     to say what is written on the button. -->
-							<button
-								{id}
-								{...aria}
-								type="button"
-								aria-label={photoAction}
-								onclick={() => fileInput?.click()}
-								class="btn btn-ghost py-3 text-caption"
-							>
-								{photoAction}
-							</button>
-
-							{#if photo}
+								<!-- Named explicitly: the field's own `<label for>` would otherwise
+								     take over the accessible name, leaving voice control with no way
+								     to say what is written on the button. -->
 								<button
+									{id}
+									{...aria}
 									type="button"
-									onclick={() => {
-										picked = '';
-										photoError = '';
-									}}
-									class="text-meta text-yellow underline underline-offset-4"
+									aria-label={photoAction}
+									onclick={() => fileInput?.click()}
+									class="btn btn-ghost py-3 text-caption"
 								>
-									{m.admin_instructors_photo_remove()}
+									{photoAction}
 								</button>
-							{/if}
-						</div>
-					{/snippet}
-				</AdminField>
+
+								{#if photo}
+									<button
+										type="button"
+										onclick={() => {
+											picked = '';
+											photoError = '';
+										}}
+										class="text-meta text-yellow underline underline-offset-4"
+									>
+										{m.admin_instructors_photo_remove()}
+									</button>
+								{/if}
+							</div>
+						{/snippet}
+					</AdminField>
+
+					<AdminField
+						label={m.admin_instructors_accent()}
+						hint={m.admin_instructors_accent_hint()}
+						issues={fields.accent.issues()}
+					>
+						{#snippet children(id, aria)}
+							<div
+								class="flex flex-col gap-3"
+								style:--accent={swatch}
+								style:--accent-on={accentForeground(swatch)}
+							>
+								<!-- A real form control with a real label, unlike the file input
+								     above, so it is the thing the label points at. It carries no
+								     `name`: the hidden field at the top of the form is what gets
+								     submitted, because "automatic" has no colour to send. -->
+								<input
+									{id}
+									{...aria}
+									type="color"
+									bind:value={() => swatch, (value) => (pickedAccent = value)}
+									class="field h-11 cursor-pointer p-1"
+								/>
+
+								<div class="flex flex-wrap items-baseline justify-between gap-2">
+									<p class="text-note text-paper/60">
+										{accent || m.admin_instructors_accent_auto()}
+									</p>
+
+									{#if accent}
+										<button
+											type="button"
+											onclick={() => (pickedAccent = '')}
+											class="text-meta text-yellow underline underline-offset-4"
+										>
+											{m.admin_instructors_accent_reset()}
+										</button>
+									{/if}
+								</div>
+
+								<!-- The two places the card spends its accent, so a colour that
+								     leaves the badge unreadable shows that here rather than on the
+								     public grid. Decorative: the hex, or the automatic line, has
+								     already said what is set. -->
+								<div aria-hidden="true" class="bg-navy">
+									<div class="p-3">
+										<span
+											class="inline-block bg-accent px-tag py-1 text-badge font-bold tracking-widest text-on-accent uppercase"
+										>
+											{m.admin_instructors_badge()}
+										</span>
+									</div>
+									<div class="h-1 w-full bg-accent"></div>
+								</div>
+
+								{#if accentBelowAA}
+									<!-- The panel's advisory tone - yellow edge on navy - rather than
+									     the field's red one, because the colour saves either way: the
+									     badge is simply below the 4.5:1 the rest of the site holds to.
+									     Outside `issues` for the same reason, so nothing marks the
+									     picker invalid. -->
+									<p
+										role="status"
+										class="border-l-3 border-yellow bg-navy px-3 py-2 text-note leading-normal text-paper"
+									>
+										{m.admin_instructors_accent_contrast()}
+									</p>
+								{/if}
+							</div>
+						{/snippet}
+					</AdminField>
+				</div>
 			</AdminCard>
 
 			<AdminCard>

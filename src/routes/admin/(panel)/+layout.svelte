@@ -4,6 +4,7 @@
 	import { getAdminOverview } from '#lib/remote/admin-dashboard.remote';
 	import * as m from '#lib/paraglide/messages';
 	import logo from '#lib/assets/efekt-logo.jpg';
+	import { ArrowLeft, Menu, X } from '@lucide/svelte';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
@@ -54,9 +55,12 @@
 				aria-expanded={open}
 				aria-controls="admin-menu"
 				aria-label={open ? m.nav_close_menu() : m.nav_open_menu()}
-				class="rounded-pill border-2 border-paper px-tag py-snug text-xl leading-none text-paper md:hidden"
+				class="inline-flex items-center justify-center rounded-pill border-2 border-paper px-tag py-snug text-paper md:hidden"
 			>
-				{open ? '✕' : '☰'}
+				{#if open}<X class="size-5" aria-hidden="true" />{:else}<Menu
+						class="size-5"
+						aria-hidden="true"
+					/>{/if}
 			</button>
 		</div>
 
@@ -101,8 +105,9 @@
 
 				<a
 					href={localizeHref('/')}
-					class="mt-3 block text-meta text-paper/55 transition-colors hover:text-paper"
+					class="mt-3 flex items-center gap-2 text-meta text-paper/55 transition-colors hover:text-paper"
 				>
+					<ArrowLeft class="size-4" aria-hidden="true" />
 					{m.admin_back_to_site()}
 				</a>
 			</div>

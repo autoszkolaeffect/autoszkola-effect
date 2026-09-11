@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { ArrowDown, ArrowUp } from '@lucide/svelte';
 	import { isLocale, localizeHref } from '#lib/paraglide/runtime';
 	import {
 		listInstructorsForAdmin,
@@ -10,7 +11,7 @@
 	import AdminPage from '#lib/components/admin/AdminPage.svelte';
 	import AdminEmpty from '#lib/components/admin/AdminEmpty.svelte';
 	import LocaleTabs from '#lib/components/admin/LocaleTabs.svelte';
-	import { accentClasses, instructorAccent } from '#lib/accents';
+	import { instructorAccentHex } from '#lib/accents';
 	import * as m from '#lib/paraglide/messages';
 
 	type Direction = 'up' | 'down';
@@ -31,14 +32,17 @@
 		new Map(instructors.filter((row) => row.published).map((row, position) => [row.id, position]))
 	);
 
-	/** The accent the row's card takes on the public grid - none if it is hidden. */
-	function accentPreview(row: AdminInstructorListItem) {
+	/**
+	 * The colour the row's card takes on the public grid - its own when one is
+	 * stored, otherwise the one its position hands it, and none at all when the
+	 * row is hidden and has no card to preview.
+	 */
+	function accentPreview(row: AdminInstructorListItem): string | null {
 		const position = publishedPositions.get(row.id);
 
-		if (position === undefined) return { edge: 'border-white/15', marker: 'bg-white/20' };
+		if (position === undefined) return null;
 
-		const accent = accentClasses(instructorAccent(position));
-		return { edge: accent.border, marker: accent.bg };
+		return instructorAccentHex(row.accent, position);
 	}
 
 	// A command rejects on an expired session or a dropped connection, and these
@@ -111,13 +115,18 @@
 					<ul class="flex flex-col gap-px">
 						{#each instructors as row, index (row.id)}
 							<!-- The left edge and the photo marker carry the accent the card
-							     will take on the public grid. -->
-							{@const preview = accentPreview(row)}
+							     will take on the public grid. A stored colour is an arbitrary
+							     hex rather than one of the four, so it cannot be a class: both
+							     read the custom property set on the row instead. -->
+							{@const accent = accentPreview(row)}
+							{@const edge = accent ? 'border-accent' : 'border-white/15'}
+							{@const marker = accent ? 'bg-accent' : 'bg-white/20'}
 							{@const translation = translationOf(row, locale)}
 							{@const name = translation?.name || m.admin_locale_missing()}
 
 							<li
-								class="flex flex-wrap items-center gap-4 border-l-3 {preview.edge} bg-blue px-4 py-3"
+								style:--accent={accent}
+								class="flex flex-wrap items-center gap-4 border-l-3 {edge} bg-blue px-4 py-3"
 							>
 								<!-- A marker, not a thumbnail: the list never loads the photos
 								     themselves, only whether one is set. -->
@@ -130,7 +139,7 @@
 										? m.admin_instructors_photo()
 										: m.admin_instructors_photo_missing()}
 									class="size-11 shrink-0 {row.hasPhoto
-										? preview.marker
+										? marker
 										: 'border border-dashed border-white/25'}"
 								></span>
 
@@ -171,9 +180,9 @@
 										disabled={index === 0}
 										aria-label={m.admin_move_up()}
 										title={m.admin_move_up()}
-										class="border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
+										class="inline-flex items-center justify-center border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
 									>
-										↑
+										<ArrowUp class="size-4" aria-hidden="true" />
 									</button>
 									<button
 										type="button"
@@ -182,9 +191,9 @@
 										disabled={index === instructors.length - 1}
 										aria-label={m.admin_move_down()}
 										title={m.admin_move_down()}
-										class="border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
+										class="inline-flex items-center justify-center border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
 									>
-										↓
+										<ArrowDown class="size-4" aria-hidden="true" />
 									</button>
 								</div>
 

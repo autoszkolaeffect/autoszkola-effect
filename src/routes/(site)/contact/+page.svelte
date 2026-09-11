@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ArrowRight } from '@lucide/svelte';
 	import type { RemoteFormIssue } from '$app/server';
 	import { getLocale } from '#lib/paraglide/runtime';
 	import { getSiteContact, submitContactForm } from '#lib/remote/site.remote';
@@ -296,7 +297,12 @@
 						class="btn btn-red self-start px-8 py-4 tracking-wider"
 						disabled={pending}
 					>
-						{pending ? m.contact_form_sending() : m.contact_form_submit()}
+						{#if pending}
+							{m.contact_form_sending()}
+						{:else}
+							{m.contact_form_submit()}
+							<ArrowRight class="size-4" aria-hidden="true" />
+						{/if}
 					</button>
 				</form>
 			{/if}

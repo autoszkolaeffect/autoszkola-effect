@@ -121,6 +121,8 @@ Rules of thumb:
   `leading-body`, `px-tag`, `grid-cards`, `bg-hero-scrim`). Adding a
   one-off size straight into a component is the thing not to do - either an
   existing token fits, or the design has a new size that belongs in the theme.
+  The single value that can be neither is an instructor's stored colour, which
+  is not known until the row is read - see [Accent colours](#accent-colours).
 - **Every length is relative.** Sizes, spacing, tracking and grid wrap points are
   all `rem` (line heights unitless, headings fluid `clamp()`), so a reader who
   enlarges their browser font gets a layout that grows with it rather than one
@@ -131,6 +133,39 @@ Rules of thumb:
   body copy here.
 - The breakpoint between the mobile and desktop layouts is `md` (768px).
 
+## Icons
+
+Every icon comes from `@lucide/svelte`, imported as a named component:
+
+```svelte
+<script lang="ts">
+	import { ArrowUp } from '@lucide/svelte';
+</script>
+
+<button aria-label={m.admin_move_up()}>
+	<ArrowUp class="size-4" aria-hidden="true" />
+</button>
+```
+
+- Size them with a `size-*` class on `class`, never the component's numeric
+  `size` prop - that prop writes `width` and `height` in px, and every length
+  here is relative, so an icon should grow with the text beside it.
+- They paint in `currentColor`, so the colour comes from the parent's `text-*`
+  rather than a prop.
+- An icon inside a control that already carries an `aria-label` or visible text
+  is `aria-hidden="true"` - it only repeats what the label already says.
+- A message string is words only. The arrow on a call to action or a back link
+  is an `ArrowRight`/`ArrowLeft` beside the label in the markup, not a `→`
+  inside the string: the catalogue then reads as prose, and the icon takes the
+  control's `gap` instead of a space character of whatever width the font
+  gives it. `.btn` is already `inline-flex` with a gap; a plain link gets
+  `inline-flex items-center gap-1` (or `gap-2`) for the same reason.
+
+Both the site and the panel used bare text characters for this (`↑`, `☰`, `★`,
+an emoji on the home page). They resolve to a different glyph on every platform,
+or to none at all when the font lacks them, and a screen reader announces them
+as the characters they are.
+
 ## Deliberate deviations from the design
 
 docs/DESIGN.md records what the prototype does. These are the places we knowingly
@@ -140,6 +175,13 @@ do something else, so they do not read as mistakes:
   `rgba(250,250,250,.4)` on the blue card, which measures 2.74:1 against it - well
   under the 4.5:1 AA needs. Content text uses at least `text-paper/70` (5.27:1).
   The `/40` and `/35` values are kept only for genuinely decorative text.
+- **Navy badge text on orange.** The design gives the instructor cycle yellow
+  with navy text and white text on the last three. An instructor badge's text
+  colour is computed from the accent's luminance rather than tabulated, so the
+  orange card's badge is navy where the design draws it white - white on
+  `#f77f00` measures 2.52:1, against the 4.5:1 AA asks of normal-size text.
+  Orange blog-category chips took navy with it, so one colour does not read two
+  ways on two screens.
 - **Focus rings.** The prototype has no focus styling at all. Everything focusable
   gets the yellow `:focus-visible` ring from the base layer.
 - **Carousel controls.** The prototype auto-advances with no way to stop it. Ours
@@ -148,6 +190,11 @@ do something else, so they do not read as mistakes:
 - **Carousel author dash.** The design renders `- Marta K.`, with the dash in the
   markup and the name alone in the data. Keep it that way: the admin panel's hint
   asks for the name without a dash.
+- **Half-star ratings.** The design draws five whole `★` characters and seeds
+  every opinion at five. `opinion.rating` is a `real` from 0 to 5 in steps of
+  0.5, typed into a number input in the panel rather than picked from a list of
+  star strings, and drawn by `src/lib/components/Stars.svelte` as five Lucide
+  slots - full, half or empty.
 - **Contact form success state.** The prototype has none; ours replaces the form
   with a confirmation panel in the same visual language.
 - **The copyright year** is the current year, not the design's hard-coded 2024.
@@ -162,14 +209,45 @@ do something else, so they do not read as mistakes:
 
 ## Accent colours
 
-- **Instructor cards** cycle by position: index 0 yellow, 1 red, 2 blue,
-  3 orange, then repeat. Yellow badges take navy text; the other three take
-  paper. Derive this from the index - it is not stored.
+- **Instructor cards** take the colour stored on `instructor.accent` as
+  `#rrggbb`, which the panel's colour picker writes. NULL means automatic, and
+  an automatic card follows its position in the grid - index 0 yellow, 1 red,
+  2 blue, 3 orange, then repeat - so reordering still re-colours every
+  instructor nobody has chosen a colour for. `instructorAccentHex()` is the one
+  place that rule lives; call it rather than deriving the fallback again.
 - **Blog categories** store their own accent (`red` / `yellow` / `blue` /
-  `orange`) on `blog_category.accent`. Yellow takes navy text, the rest paper.
+  `orange`) on `blog_category.accent`. Yellow and orange take navy text, red and
+  blue paper.
 
-Put the mapping in one helper and import it rather than repeating the
+Both rules live in `src/lib/accents.ts` - import them rather than repeating the
 conditional.
+
+The text a category chip takes is written down only because there are four of
+them. An instructor's colour can be anything, so the text on top is computed
+from the colour's relative luminance by `accentForeground()` and reaches the
+card as `--accent-on` - and the four tabulated pairings are exactly what that
+function returns for the four hexes, so a colour cannot read one way as a chip
+and another as a badge. Nothing here is "yellow is the dark-text one": orange is
+too, and an arbitrary picked colour lands wherever its luminance puts it.
+`accentMeetsAA()` is the other half of the same sum - picking the better of two
+foregrounds still fails AA for mid-tones, so the panel's colour field warns when
+the chosen accent cannot carry legible text either way.
+
+That colour also cannot be a Tailwind class: the class would have to exist
+before the row is read. The card carries it as custom properties instead, set
+with Svelte `style:` directives, and three utilities in `src/routes/layout.css`
+read them anywhere inside it:
+
+```svelte
+<article style:--accent={hex} style:--accent-on={accentForeground(hex)}>
+	<p class="bg-accent px-tag text-on-accent">{instructor.badge}</p>
+</article>
+```
+
+`bg-accent`, `border-accent` and `text-on-accent` are not a way around the
+no-arbitrary-values rule - they are how it holds for a value only known at
+runtime. The markup still names a utility; only the colour arrives late. A
+length or colour known while writing the component still belongs in the theme.
 
 ## Admin panel
 

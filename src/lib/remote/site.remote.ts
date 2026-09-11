@@ -182,6 +182,7 @@ export const listInstructors = query(localeArg, async (locale) => {
 		.select({
 			id: instructor.id,
 			photo: instructor.photo,
+			accent: instructor.accent,
 			name: withFallback(requested.name, fallback.name),
 			badge: withFallback(requested.badge, fallback.badge),
 			experience: withFallback(requested.experience, fallback.experience),

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { ArrowDown, ArrowUp } from '@lucide/svelte';
 	import {
 		deleteOpinion,
 		listOpinionsForAdmin,
@@ -12,6 +13,7 @@
 	import AdminField from '#lib/components/admin/AdminField.svelte';
 	import AdminEmpty from '#lib/components/admin/AdminEmpty.svelte';
 	import LocaleTabs from '#lib/components/admin/LocaleTabs.svelte';
+	import Stars from '#lib/components/Stars.svelte';
 	import { indexOfLocale } from '#lib/locales';
 	import * as m from '#lib/paraglide/messages';
 
@@ -19,8 +21,6 @@
 	// on the server, and a snapshot would keep showing the rows - and the stored
 	// text a saved form falls back to - from before the change.
 	const opinions = $derived(await listOpinionsForAdmin());
-
-	const RATINGS = [1, 2, 3, 4, 5];
 
 	const EMPTY_TEXT = { author: '', quote: '' };
 
@@ -37,10 +37,17 @@
 	 */
 	const typed = (value: unknown, stored: string) => (typeof value === 'string' ? value : stored);
 
-	const chosenRating = (value: unknown, stored: number) => {
-		const rating = Number(value);
-		return rating >= 1 && rating <= 5 ? rating : stored;
-	};
+	/**
+	 * The rating the preview should draw. This only feeds the stars beside the
+	 * form - the server validates what is actually submitted - so it stays
+	 * forgiving about the states a number input passes through while it is being
+	 * typed. SvelteKit parses a number field before its value reaches this page,
+	 * and one the editor has emptied - or filled with anything the browser cannot
+	 * read as a number - parses to `undefined` rather than to a number, so the
+	 * stored rating stands in until the field is a number in range again.
+	 */
+	const chosenRating = (value: number | undefined, stored: number) =>
+		value !== undefined && value >= 0 && value <= 5 ? value : stored;
 
 	const arrowClass =
 		'flex h-9 w-9 items-center justify-center border-2 border-yellow/60 text-yellow transition-colors hover:border-yellow disabled:opacity-35';
@@ -164,12 +171,7 @@
 							<p class="eyebrow mb-2 text-eyebrow text-paper/50">{m.admin_opinions_preview()}</p>
 
 							<figure class="border-t-3 border-yellow bg-navy p-7">
-								<span
-									class="text-lead tracking-stars text-yellow"
-									aria-label={m.opinions_rating({ rating })}
-								>
-									{'★'.repeat(rating)}
-								</span>
+								<Stars {rating} />
 								<blockquote class="mt-3 mb-4 text-body leading-body text-paper/85 italic">
 									{typed(text.quote.value(), stored.quote)}
 								</blockquote>
@@ -187,18 +189,21 @@
 			>
 				<div class="flex flex-wrap items-end gap-6">
 					<div class="w-36">
-						<AdminField label={m.admin_opinions_rating()} issues={fields.rating.issues()}>
+						<AdminField
+							label={m.admin_opinions_rating()}
+							hint={m.admin_opinions_rating_hint()}
+							issues={fields.rating.issues()}
+						>
 							{#snippet children(id, aria)}
-								<select
+								<input
 									{id}
 									class="field"
-									{...fields.rating.as('select', String(row.rating))}
+									{...fields.rating.as('number', row.rating)}
 									{...aria}
-								>
-									{#each RATINGS as rating (rating)}
-										<option value={String(rating)}>{'★'.repeat(rating)}</option>
-									{/each}
-								</select>
+									min="0"
+									max="5"
+									step="0.5"
+								/>
 							{/snippet}
 						</AdminField>
 					</div>
@@ -230,7 +235,7 @@
 								disabled={index === 0 || moveOpinion.pending > 0}
 								onclick={() => run(() => moveOpinion({ id: row.id, direction: 'up' }))}
 							>
-								↑
+								<ArrowUp class="size-4" aria-hidden="true" />
 							</button>
 							<button
 								type="button"
@@ -239,7 +244,7 @@
 								disabled={index === opinions.length - 1 || moveOpinion.pending > 0}
 								onclick={() => run(() => moveOpinion({ id: row.id, direction: 'down' }))}
 							>
-								↓
+								<ArrowDown class="size-4" aria-hidden="true" />
 							</button>
 						</div>
 

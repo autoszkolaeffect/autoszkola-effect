@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ArrowLeft } from '@lucide/svelte';
 	import { error } from '@sveltejs/kit';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import { getBlogPost } from '#lib/remote/site.remote';
@@ -29,7 +30,11 @@
 </svelte:head>
 
 <article class="mx-auto max-w-190 px-6 pt-12 pb-20">
-	<a href={localizeHref('/blog')} class="mb-10 inline-block text-label text-yellow">
+	<a
+		href={localizeHref('/blog')}
+		class="mb-10 inline-flex items-center gap-2 text-label text-yellow"
+	>
+		<ArrowLeft class="size-4" aria-hidden="true" />
 		{m.blog_back()}
 	</a>
 

@@ -1,4 +1,13 @@
 <script lang="ts">
+	import {
+		ArrowRight,
+		CalendarDays,
+		Car,
+		CreditCard,
+		GraduationCap,
+		Smartphone,
+		Trophy
+	} from '@lucide/svelte';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import { listOpinions } from '#lib/remote/site.remote';
 	import OpinionsCarousel from '#lib/components/OpinionsCarousel.svelte';
@@ -16,12 +25,16 @@
 	];
 
 	const features = [
-		{ icon: '🏆', title: m.feature_pass_rate_title(), body: m.feature_pass_rate_body() },
-		{ icon: '👨‍🏫', title: m.feature_instructors_title(), body: m.feature_instructors_body() },
-		{ icon: '📱', title: m.feature_theory_title(), body: m.feature_theory_body() },
-		{ icon: '🚗', title: m.feature_fleet_title(), body: m.feature_fleet_body() },
-		{ icon: '📅', title: m.feature_hours_title(), body: m.feature_hours_body() },
-		{ icon: '💳', title: m.feature_payments_title(), body: m.feature_payments_body() }
+		{ icon: Trophy, title: m.feature_pass_rate_title(), body: m.feature_pass_rate_body() },
+		{
+			icon: GraduationCap,
+			title: m.feature_instructors_title(),
+			body: m.feature_instructors_body()
+		},
+		{ icon: Smartphone, title: m.feature_theory_title(), body: m.feature_theory_body() },
+		{ icon: Car, title: m.feature_fleet_title(), body: m.feature_fleet_body() },
+		{ icon: CalendarDays, title: m.feature_hours_title(), body: m.feature_hours_body() },
+		{ icon: CreditCard, title: m.feature_payments_title(), body: m.feature_payments_body() }
 	];
 </script>
 
@@ -61,7 +74,10 @@
 		</p>
 
 		<div class="flex flex-wrap justify-center gap-4">
-			<a href={localizeHref('/contact')} class="btn btn-red">{m.hero_cta_primary()}</a>
+			<a href={localizeHref('/contact')} class="btn btn-red">
+				{m.hero_cta_primary()}
+				<ArrowRight class="size-4" aria-hidden="true" />
+			</a>
 			<a href={localizeHref('/instructors')} class="btn btn-ghost">{m.hero_cta_secondary()}</a>
 		</div>
 	</div>
@@ -97,10 +113,11 @@
 
 		<div class="grid grid-cards gap-6">
 			{#each features as feature (feature.title)}
+				{@const Icon = feature.icon}
 				<article
 					class="border-l-4 border-red bg-navy p-8 text-paper transition-transform duration-150 hover:-translate-y-1"
 				>
-					<div class="mb-3 text-icon" aria-hidden="true">{feature.icon}</div>
+					<Icon class="mb-3 size-8 text-yellow" aria-hidden="true" />
 					<h3 class="mb-tag text-lead font-bold text-yellow">{feature.title}</h3>
 					<p class="text-body-sm leading-card text-paper/80">{feature.body}</p>
 				</article>
@@ -133,5 +150,6 @@
 	<p class="mb-8 text-body-lg text-paper/90">{m.home_cta_body()}</p>
 	<a href={localizeHref('/contact')} class="btn btn-yellow px-10 py-4 text-body-lg">
 		{m.home_cta_button()}
+		<ArrowRight class="size-5" aria-hidden="true" />
 	</a>
 </section>

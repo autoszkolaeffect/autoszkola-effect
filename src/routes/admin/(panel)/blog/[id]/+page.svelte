@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ArrowLeft } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import {
@@ -110,7 +111,11 @@
 
 <AdminPage title={isNew ? m.admin_blog_new() : m.admin_blog_edit()}>
 	{#snippet actions()}
-		<a href={localizeHref('/admin/blog')} class="text-caption text-yellow">
+		<a
+			href={localizeHref('/admin/blog')}
+			class="inline-flex items-center gap-1 text-caption text-yellow"
+		>
+			<ArrowLeft class="size-4" aria-hidden="true" />
 			{m.admin_back_to_list()}
 		</a>
 	{/snippet}

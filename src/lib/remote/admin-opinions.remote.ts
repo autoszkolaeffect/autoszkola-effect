@@ -13,11 +13,12 @@ import { idArg, optionalText, perLocale } from './schema';
 import * as m from '#lib/paraglide/messages';
 
 // The opinions behind the home page carousel. Two short fields per locale, a
-// star rating and a position, so the whole domain is edited inline in one list
-// rather than on a separate page per row.
+// half-star rating and a position, so the whole domain is edited inline in one
+// list rather than on a separate page per row.
 
-const RATING_MIN = 1;
+const RATING_MIN = 0;
 const RATING_MAX = 5;
+const RATING_STEP = 0.5;
 
 type OpinionText = { locale: string; author: string; quote: string };
 
@@ -66,12 +67,19 @@ export const listOpinionsForAdmin = query(async () => {
 	}));
 });
 
-/** Star count, 1 to 5. It arrives as a string because it comes from a `<select>`. */
+/**
+ * A rating from 0 to 5 in half-star steps. The field is a number input, and
+ * SvelteKit marks such a field's name so that the submitted string is parsed
+ * before validation - so this sees a number, or nothing at all when the field
+ * was emptied, which the number schema rejects along with anything unparseable.
+ * The step is tested by dividing rather than by a modulo: halves divide exactly
+ * in binary, whereas `4.5 % 0.5` is at the mercy of the representation.
+ */
 const ratingArg = v.pipe(
-	v.string(),
-	v.transform((value) => Number(value)),
+	v.number(() => m.admin_error_generic()),
 	v.check(
-		(rating) => Number.isInteger(rating) && rating >= RATING_MIN && rating <= RATING_MAX,
+		(rating) =>
+			rating >= RATING_MIN && rating <= RATING_MAX && Number.isInteger(rating / RATING_STEP),
 		() => m.admin_error_generic()
 	)
 );

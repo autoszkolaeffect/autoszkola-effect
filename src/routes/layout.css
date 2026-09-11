@@ -90,7 +90,6 @@
 	--text-panel: 1.4rem;
 	--text-login: 1.5rem;
 	--text-metric: 1.9rem;
-	--text-icon: 2rem;
 
 	/* Line heights, tightest first. */
 	--leading-hero: 1.1;
@@ -110,7 +109,6 @@
 	--tracking-eyebrow: 0.08em;
 	--tracking-badge: 0.12em;
 	--tracking-hero-badge: 0.15em;
-	--tracking-stars: 0.125rem;
 
 	/* The design pads small badges and pills in steps finer than the 0.25rem
 	   spacing scale, so those steps are named here. */
@@ -143,6 +141,24 @@
 
 @utility bg-photo-scrim {
 	background-image: linear-gradient(transparent, rgba(0, 22, 51, 0.9));
+}
+
+/* An instructor's accent is whatever hex the panel stored, so it is neither one
+   of the four palette tokens nor known until the row is read. The element
+   carries it as custom properties instead - `style:--accent` and
+   `style:--accent-on` - and these three read them. That is also how the
+   no-arbitrary-values rule survives a runtime colour: the markup still names a
+   utility, and the value arrives through the property. */
+@utility bg-accent {
+	background-color: var(--accent);
+}
+
+@utility border-accent {
+	border-color: var(--accent);
+}
+
+@utility text-on-accent {
+	color: var(--accent-on);
 }
 
 @utility object-hero {

@@ -1,13 +1,13 @@
 import { relations, sql } from 'drizzle-orm';
-import { index, integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
+import { index, integer, real, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
 
 export * from './auth.schema';
 
 // Every piece of editable content is split in two: a base row holding the
 // locale-independent facts (ordering, photo, dates, status) and one translation
 // row per locale holding the words. Adding a locale to `project.inlang/settings.json`
-// therefore never needs a migration - `src/lib/server/content/locales.ts` fills in
-// the missing translation rows for the new locale on demand.
+// therefore never needs a migration - `src/lib/locales.ts` fills in the missing
+// translation rows for the new locale on demand.
 //
 // Translation tables all follow the same shape: a cascading parent reference, a
 // `locale` column, and a unique index over the pair.
@@ -34,9 +34,14 @@ export const instructor = sqliteTable('instructor', {
 	id: id(),
 	sortOrder: integer('sort_order').notNull().default(0),
 	// A `data:image/...;base64,...` URL. The admin panel downscales before upload -
-	// see `MAX_PHOTO_BYTES` in src/lib/server/content/instructors.remote.ts - because
+	// see `MAX_PHOTO_BYTES` in src/lib/remote/admin-instructors.remote.ts - because
 	// a D1 row cannot exceed 1 MB.
 	photo: text('photo'),
+	// A `#rrggbb` colour picked in the admin panel. NULL means automatic: the card
+	// falls back to the positional cycle - see `instructorAccentHex` in
+	// src/lib/accents.ts. Unlike `blog_category.accent`, which is an enum limited to
+	// the four palette names, this is free-form, because the picker offers any colour.
+	accent: text('accent'),
 	published: integer('published', { mode: 'boolean' }).notNull().default(true),
 	createdAt: createdAt(),
 	updatedAt: updatedAt()
@@ -138,7 +143,8 @@ export const blogPostTranslation = sqliteTable(
 export const opinion = sqliteTable('opinion', {
 	id: id(),
 	sortOrder: integer('sort_order').notNull().default(0),
-	rating: integer('rating').notNull().default(5),
+	// Real rather than integer: a rating is 0-5 in half-star steps, so 4.5 has to survive.
+	rating: real('rating').notNull().default(5),
 	published: integer('published', { mode: 'boolean' }).notNull().default(true),
 	createdAt: createdAt(),
 	updatedAt: updatedAt()

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLocale } from '#lib/paraglide/runtime';
 	import { listInstructors } from '#lib/remote/site.remote';
-	import { accentClasses, instructorAccent } from '#lib/accents';
+	import { accentForeground, instructorAccentHex } from '#lib/accents';
 	import * as m from '#lib/paraglide/messages';
 
 	const instructors = await listInstructors(getLocale());
@@ -32,12 +32,16 @@
 	{:else}
 		<div class="grid grid-cards gap-8">
 			{#each instructors as instructor, index (instructor.id)}
-				<!-- The accent is positional, not stored, so reordering in the admin
-				     panel re-colours the grid on its own. -->
-				{@const accent = accentClasses(instructorAccent(index))}
+				<!-- An instructor can be given a colour in the admin panel; one that has
+				     not been keeps following its position, so reordering still re-colours
+				     the rest of the grid. -->
+				{@const hex = instructorAccentHex(instructor.accent, index)}
+				{@const on = accentForeground(hex)}
 
 				<article
 					class="relative overflow-hidden bg-blue transition-transform duration-200 hover:-translate-y-1"
+					style:--accent={hex}
+					style:--accent-on={on}
 				>
 					<div class="relative h-70 overflow-hidden">
 						{#if instructor.photo}
@@ -61,7 +65,7 @@
 
 						{#if instructor.badge}
 							<p
-								class="absolute bottom-3 left-4 px-tag py-1 text-badge font-bold tracking-widest uppercase {accent.solid}"
+								class="absolute bottom-3 left-4 bg-accent px-tag py-1 text-badge font-bold tracking-widest text-on-accent uppercase"
 							>
 								{instructor.badge}
 							</p>
@@ -78,7 +82,7 @@
 						<p class="text-body-sm leading-bio text-paper/80">{instructor.bio}</p>
 					</div>
 
-					<div class="absolute bottom-0 h-1 w-full {accent.bg}"></div>
+					<div class="absolute bottom-0 h-1 w-full bg-accent"></div>
 				</article>
 			{/each}
 		</div>

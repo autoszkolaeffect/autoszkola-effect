@@ -30,6 +30,15 @@ export function formatDateTime(
 	}).format(value instanceof Date ? value : new Date(value));
 }
 
+/**
+ * "4,5" - a star rating for a label. Polish writes the decimal with a comma, and
+ * a whole rating reads as "5" rather than "5,0", which is why this goes through
+ * Intl instead of `toFixed`.
+ */
+export function formatRating(value: number, locale = getLocale()): string {
+	return new Intl.NumberFormat(locale).format(value);
+}
+
 /** `2024-03-12`, for `<input type="date">`. */
 export function toDateInputValue(value: Date | number | null | undefined): string {
 	if (value === null || value === undefined) return '';
