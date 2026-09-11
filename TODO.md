@@ -1,0 +1,6 @@
+- [ ] - tekst wewnatrz edytora "pisz" (edycja artykulow bloga) jest ciemny - powinien byc jasny
+- [ ] - ikony inputow sa ciemne - powinny byc jasne (calendar input, number input etc)
+- [ ] - trzeba zrobic kompletny audyt SEO (dla stron publicznych - strony admina musza byc oznaczone jako no-index)
+  - [ ] - kazda karta powinna miec odpowiedni title (przedrostki Auto Szkoła Efekt | ... dla zagniezdzonych stron publicznych)
+  - [ ] - og graph generowany on the fly dla kazdej strony publicznej (wliczajac artykuly bloga)
+  - [ ] - sitemap generowany dynamicznie w momencie builda (lub generowany na zawolanie)
