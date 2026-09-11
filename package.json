@@ -68,6 +68,8 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^1.44.0",
-		"nodemailer": "^10.0.3"
+		"@resvg/resvg-js": "^2.6.2",
+		"nodemailer": "^10.0.3",
+		"satori": "0.32.0"
 	}
 }

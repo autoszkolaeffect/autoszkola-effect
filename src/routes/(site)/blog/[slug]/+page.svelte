@@ -1,10 +1,20 @@
 <script lang="ts">
 	import { ArrowLeft } from '@lucide/svelte';
 	import { error } from '@sveltejs/kit';
+	import { page } from '$app/state';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import { getBlogPost } from '#lib/remote/site.remote';
+	import Seo from '#lib/components/Seo.svelte';
 	import { accentClasses } from '#lib/accents';
 	import { formatLongDate } from '#lib/format';
+	import {
+		absoluteUrl,
+		isoDate,
+		logoHref,
+		metaDescription,
+		ogArticleImageHref,
+		pageTitle
+	} from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
 	import type { PageProps } from './$types';
 
@@ -12,22 +22,92 @@
 	// `slug` is always present here.
 	const { params }: PageProps = $props();
 
+	const locale = getLocale();
+
 	// Derived rather than awaited once, so that following a link to another
 	// article re-reads the query instead of keeping the first one on screen.
 	// `error` returns `never`, which both narrows `post` and turns an unknown or
 	// unpublished slug into a real 404 rather than an empty article.
 	const post = $derived(
-		(await getBlogPost({ locale: getLocale(), slug: params.slug })) ??
-			error(404, m.error_404_title())
+		(await getBlogPost({ locale, slug: params.slug })) ?? error(404, m.error_404_title())
 	);
 
 	const accent = $derived(accentClasses(post.categoryAccent));
+
+	// Everything the head says about the article follows `post` and `params` the
+	// same way, so navigating between articles rewrites the tags along with the body.
+	const path = $derived(`/blog/${params.slug}`);
+	const canonical = $derived(absoluteUrl(page.url.origin, path));
+	// Versioned by the post's last save, so an edited title gets a fresh card
+	// rather than the one the CDN and the social networks still hold.
+	const image = $derived(ogArticleImageHref(page.url.origin, locale, params.slug, post.updatedAt));
+
+	const description = $derived(metaDescription(post.description || m.site_description()));
+
+	// The school publishes under its own name rather than an author's, so author
+	// and publisher are the same organisation. Unset fields are `undefined`, which
+	// `JSON.stringify` drops - only what has data reaches the page.
+	const jsonLd = $derived.by(() => {
+		const organization = {
+			'@type': 'Organization',
+			name: m.site_name(),
+			url: absoluteUrl(page.url.origin, '/')
+		};
+
+		return [
+			{
+				'@context': 'https://schema.org',
+				'@type': 'BlogPosting',
+				headline: post.title,
+				description,
+				image,
+				datePublished: isoDate(post.publishedAt),
+				dateModified: isoDate(post.updatedAt),
+				inLanguage: locale,
+				articleSection: post.categoryLabel || undefined,
+				mainEntityOfPage: canonical,
+				author: organization,
+				publisher: {
+					...organization,
+					logo: { '@type': 'ImageObject', url: logoHref(page.url.origin) }
+				}
+			},
+			{
+				'@context': 'https://schema.org',
+				'@type': 'BreadcrumbList',
+				itemListElement: [
+					{
+						'@type': 'ListItem',
+						position: 1,
+						name: m.nav_home(),
+						item: absoluteUrl(page.url.origin, '/')
+					},
+					{
+						'@type': 'ListItem',
+						position: 2,
+						name: m.nav_blog(),
+						item: absoluteUrl(page.url.origin, '/blog')
+					},
+					{ '@type': 'ListItem', position: 3, name: post.title, item: canonical }
+				]
+			}
+		];
+	});
 </script>
 
-<svelte:head>
-	<title>{post.title}</title>
-	<meta name="description" content={post.excerpt} />
-</svelte:head>
+<Seo
+	title={pageTitle(post.title)}
+	{description}
+	{path}
+	{image}
+	type="article"
+	article={{
+		publishedAt: post.publishedAt,
+		modifiedAt: post.updatedAt,
+		section: post.categoryLabel || undefined
+	}}
+	{jsonLd}
+/>
 
 <article class="mx-auto max-w-190 px-6 pt-12 pb-20">
 	<a

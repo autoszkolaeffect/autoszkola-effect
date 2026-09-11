@@ -1,4 +1,0 @@
-# The admin panel is behind a login, but there is no reason for it to be crawled.
-User-agent: *
-Disallow: /pl/admin
-Disallow: /admin

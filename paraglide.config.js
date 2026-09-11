@@ -28,11 +28,21 @@ export const paraglideOptions = {
 		}
 	],
 
+	// SvelteKit answers `/pl/` with a 308 to `/pl`, so the home page has to be
+	// written the way it is served - by the nav, the canonical, the sitemap and
+	// the middleware's own redirect from `/`. Without this the runtime localizes
+	// `/` to `/pl/`, and every one of those pointed at a redirect.
+	trailingSlash: 'never',
+
 	// Endpoints that are not pages must never be rewritten or redirected:
-	// better-auth lives under /api/auth, and SvelteKit's remote functions and
-	// client assets under /_app.
+	// better-auth lives under /api/auth, SvelteKit's remote functions and client
+	// assets under /_app, and the crawler-facing files - robots.txt, the sitemap
+	// and the Open Graph images - are addressed by their bare, unprefixed paths.
 	routeStrategies: [
 		{ match: '/api/:path(.*)?', exclude: true },
-		{ match: '/_app/:path(.*)?', exclude: true }
+		{ match: '/_app/:path(.*)?', exclude: true },
+		{ match: '/og/:path(.*)?', exclude: true },
+		{ match: '/robots.txt', exclude: true },
+		{ match: '/sitemap.xml', exclude: true }
 	]
 };

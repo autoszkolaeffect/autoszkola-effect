@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { pageTitle } from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
 
 	let {
@@ -13,10 +14,16 @@
 		actions?: Snippet;
 		children: Snippet;
 	} = $props();
+
+	// "Auto Szkoła Efekt | Panel administracyjny | Blog". The dashboard is titled
+	// with the panel's own name, which would otherwise appear twice.
+	const documentTitle = $derived(
+		title === m.admin_title() ? pageTitle(title) : pageTitle(m.admin_title(), title)
+	);
 </script>
 
 <svelte:head>
-	<title>{title} · {m.admin_title()}</title>
+	<title>{documentTitle}</title>
 </svelte:head>
 
 <div class="mx-auto max-w-275 px-6 py-10">

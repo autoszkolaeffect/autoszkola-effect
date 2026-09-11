@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { pageTitle } from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
 	import logo from '#lib/assets/efekt-logo.jpg';
 	import type { PageProps } from './$types';
@@ -10,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>{m.admin_login_title()}</title>
+	<title>{pageTitle(m.admin_login_title())}</title>
 </svelte:head>
 
 <div class="flex min-h-screen items-center justify-center px-6 py-16">

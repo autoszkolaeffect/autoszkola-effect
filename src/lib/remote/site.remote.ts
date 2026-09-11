@@ -25,7 +25,7 @@ import {
 	opinionTranslation
 } from '#lib/server/db/schema';
 import { baseLocale } from '#lib/locales';
-import { renderMarkdown } from '#lib/markdown';
+import { markdownToPlainText, renderMarkdown } from '#lib/markdown';
 import { escapeHtml, sendNotification } from '#lib/server/mailer';
 import { verifyTurnstile } from '#lib/server/turnstile';
 import { localeArg } from './schema';
@@ -64,6 +64,7 @@ export const getSiteContact = query(localeArg, async (locale) => {
 			email: contactSettings.email,
 			mapQuery: contactSettings.mapQuery,
 			mapEmbedUrl: contactSettings.mapEmbedUrl,
+			updatedAt: contactSettings.updatedAt,
 			pageTitle: withFallback(requested.pageTitle, fallback.pageTitle),
 			pageIntro: withFallback(requested.pageIntro, fallback.pageIntro),
 			phonesHeading: withFallback(requested.phonesHeading, fallback.phonesHeading),
@@ -122,6 +123,10 @@ export const getSiteContact = query(localeArg, async (locale) => {
 
 	return {
 		email: settings?.email ?? '',
+		// The settings form saves this row and the translations together, so it
+		// dates the words on the contact page too - which is what versions the
+		// page's Open Graph card.
+		updatedAt: settings?.updatedAt ?? null,
 		pageTitle: settings?.pageTitle ?? '',
 		pageIntro: settings?.pageIntro ?? '',
 		phonesHeading: settings?.phonesHeading ?? '',
@@ -304,6 +309,7 @@ export const getBlogPost = query(
 			.select({
 				id: blogPost.id,
 				publishedAt: blogPost.publishedAt,
+				updatedAt: blogPost.updatedAt,
 				readingMinutes: blogPost.readingMinutes,
 				categorySlug: blogCategory.slug,
 				categoryAccent: blogCategory.accent,
@@ -343,8 +349,15 @@ export const getBlogPost = query(
 		if (!row) return null;
 
 		// Rendered here rather than in the component so the article is in the SSR
-		// payload, and so markdown-it never ships to the browser.
-		return { ...row, html: renderMarkdown(row.body) };
+		// payload, and so markdown-it never ships to the browser. The description
+		// is what a search result and a share preview show: the excerpt when the
+		// author wrote one, otherwise the opening words of the article - cut
+		// generously here, to a sentence's length by the page.
+		return {
+			...row,
+			html: renderMarkdown(row.body),
+			description: row.excerpt || markdownToPlainText(row.body).slice(0, 300)
+		};
 	}
 );
 

@@ -51,7 +51,9 @@ docs/IMPLEMENTATION.md    how the code is organised - read before changing anyth
 messages/pl.json          every user-visible string
 seed/content/             the starting content: blog posts as markdown, instructor photos
 src/lib/remote/           remote functions - all data access goes through these
-src/lib/server/           database, auth, mail, Turnstile, secret encryption
+src/lib/seo.ts            titles, canonical and Open Graph helpers behind <Seo>
+src/lib/server/           database, auth, mail, Turnstile, secret encryption, OG images
+src/routes/og/            Open Graph images, drawn on request; sitemap.xml and robots.txt sit beside it
 src/routes/(site)/        the public site
 src/routes/admin/         the admin panel
 ```

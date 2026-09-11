@@ -206,6 +206,11 @@
 @layer base {
 	html {
 		scroll-behavior: smooth;
+		/* Every surface is navy, so the browser's own widgets should be too: the
+		   calendar icon on a date input, the spinner on a number input, the native
+		   select popup and the scrollbars all follow this rather than the light
+		   default that left them dark on dark. */
+		color-scheme: dark;
 	}
 
 	body {
@@ -260,7 +265,10 @@
 	.field {
 		width: 100%;
 		box-sizing: border-box;
-		background: var(--color-navy);
+		/* `background-color`, not the `background` shorthand: the shorthand also
+		   resets background-image, -repeat and -size, which is what silently threw
+		   away the chevron @tailwindcss/forms paints on a select. */
+		background-color: var(--color-navy);
 		border: 1px solid --alpha(#fff / 20%);
 		border-radius: 0;
 		color: var(--color-paper);
@@ -303,6 +311,11 @@
 		   room for it with padding-right; `.field`'s shorthand padding wiped that
 		   out, so a long option ran underneath the arrow. */
 		padding-right: 2.5rem;
+		/* The plugin's chevron is a fixed mid-grey drawn for a white field. Same
+		   glyph - the plugin's own size and position still apply - but in paper
+		   so it reads on navy. A data URL cannot reach a custom property, hence
+		   the literal hex. */
+		background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23fafafa' stroke-opacity='.75' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
 	}
 
 	/* Buttons. The design uses the display serif for anything that reads as a

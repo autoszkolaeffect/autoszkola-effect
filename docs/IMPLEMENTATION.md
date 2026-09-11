@@ -268,6 +268,59 @@ The panel uses the same palette as the public site but a denser, plainer layout:
 navy page, `bg-blue` cards, `.field` inputs, `.btn-*` buttons. It is a working
 tool, not a landing page.
 
+## Head metadata and crawlers
+
+Every public page renders `src/lib/components/Seo.svelte` in place of a
+hand-written `<svelte:head>`: title, description, canonical, Open Graph and
+Twitter tags, and optional JSON-LD, from one set of props. The helpers it builds
+on live in `src/lib/seo.ts`.
+
+- **Titles** are `pageTitle(part)` - `Auto Szkoła Efekt | Blog`, site name
+  first. The home page's `home_title` message is the tagline after the bar, not
+  a full title. The admin panel adds its own segment (`… | Panel administracyjny
+| Blog`) through `AdminPage`.
+- **Absolute URLs** come from `page.url.origin` (or `url.origin` in a
+  `+server.ts`), never from an env var, so previews describe themselves and
+  production describes itself. `absoluteUrl(origin, '/blog')` localizes on the
+  way, so a canonical can never disagree with the links on the page.
+- **Open Graph images** are drawn on request by `src/routes/og/…` from the same
+  strings the page shows - `/og/pl/blog.png`, `/og/pl/blog/<slug>.png` - with
+  satori and resvg (`src/lib/server/og/`). The fonts and the logo are Vite
+  asset imports opened with `read()` from `$app/server`, which is what makes
+  the adapter ship them inside the function. Nothing user-supplied reaches the
+  renderer except through a database query. A card drawn from admin-edited
+  words (an article, the contact page) carries `?v=<updatedAt>` so the CDN and
+  the social networks, which cache by URL for days, fetch a fresh one after an
+  edit.
+- **satori is pinned to 0.32.0** and must stay there until this is resolved:
+  0.33 added HarfBuzz shaping through `harfbuzzjs`, whose loader reads
+  `hb.wasm` from its own directory with a computed path that `@vercel/nft`
+  cannot trace - so the build passes, the dev server works, and every `/og/*`
+  request 500s on Vercel. 0.32 embeds everything it needs, and Latin text
+  needs no shaper. After upgrading anything in this chain, check the function
+  in `.vercel/output/functions/` still renders before trusting a preview.
+- **`/sitemap.xml` and `/robots.txt`** are routes, not files in `static/`: the
+  sitemap lists what is published right now, and robots needs the origin for
+  its `Sitemap:` line. All three - `/og/*` included - are excluded from
+  Paraglide's URL strategy in `paraglide.config.js`, so they answer at their
+  bare paths; inside them the ambient locale is the base locale, and every
+  message or href names its locale explicitly.
+- **Nothing under `/admin` is indexable**: the layout's `<meta name="robots">`
+  for pages that render, and an `X-Robots-Tag` header from `hooks.server.ts`
+  for everything else - the redirect to the login page included. robots.txt
+  deliberately does _not_ disallow `/admin`: a crawler only honours `noindex`
+  on a page it may fetch, so a Disallow would leave a linked-to admin URL in
+  the index as a bare entry.
+- **Trailing slashes are never.** SvelteKit redirects `/pl/` to `/pl`, so
+  `paraglide.config.js` sets `trailingSlash: 'never'` and the runtime
+  localizes `/` to `/pl` - the nav, the canonical and the sitemap all name
+  the URL that is actually served.
+- **Param matchers** live in `src/params/index.ts`, and SvelteKit loads that
+  file with a plain Node `import()` at build time. Nothing in it may come from
+  `#lib/*` (Node cannot resolve the extensionless specifier) - which is why the
+  list of pages with an Open Graph card is defined there and `seo.ts` imports
+  the type from it, not the other way round.
+
 ## Photos
 
 Instructor photos are stored as `data:image/...;base64,...` in

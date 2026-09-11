@@ -8,12 +8,16 @@
 		Smartphone,
 		Trophy
 	} from '@lucide/svelte';
+	import { page } from '$app/state';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import { listOpinions } from '#lib/remote/site.remote';
 	import OpinionsCarousel from '#lib/components/OpinionsCarousel.svelte';
+	import Seo from '#lib/components/Seo.svelte';
+	import { metaDescription, ogImageHref, pageTitle } from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
 
-	const opinions = await listOpinions(getLocale());
+	const locale = getLocale();
+	const opinions = await listOpinions(locale);
 
 	// Static marketing copy lives in the message catalogue rather than the
 	// database - it is part of the page's design, not content the school edits
@@ -38,10 +42,14 @@
 	];
 </script>
 
-<svelte:head>
-	<title>{m.home_title()}</title>
-	<meta name="description" content={m.site_description()} />
-</svelte:head>
+<!-- `home_title` is the tagline, not a full title: the site name is prepended
+     here like on every other page, so the tab reads "Auto Szkoła Efekt | …". -->
+<Seo
+	title={pageTitle(m.home_title())}
+	description={metaDescription(m.site_description())}
+	path="/"
+	image={ogImageHref(page.url.origin, locale, 'home')}
+/>
 
 <!-- Hero -------------------------------------------------------------------->
 <section class="relative overflow-hidden bg-navy px-6 pt-20 pb-16 text-center">

@@ -1,16 +1,22 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { getLocale } from '#lib/paraglide/runtime';
 	import { listInstructors } from '#lib/remote/site.remote';
+	import Seo from '#lib/components/Seo.svelte';
 	import { accentForeground, instructorAccentHex } from '#lib/accents';
+	import { metaDescription, ogImageHref, pageTitle } from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
 
-	const instructors = await listInstructors(getLocale());
+	const locale = getLocale();
+	const instructors = await listInstructors(locale);
 </script>
 
-<svelte:head>
-	<title>{m.instructors_title()} - {m.site_name()}</title>
-	<meta name="description" content={m.instructors_intro()} />
-</svelte:head>
+<Seo
+	title={pageTitle(m.instructors_title())}
+	description={metaDescription(m.instructors_intro())}
+	path="/instructors"
+	image={ogImageHref(page.url.origin, locale, 'instructors')}
+/>
 
 <!-- Page header band --------------------------------------------------------->
 <section class="border-b-4 border-yellow bg-blue px-6 pt-16 pb-12">

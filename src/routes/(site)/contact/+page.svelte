@@ -1,20 +1,25 @@
 <script lang="ts">
 	import { ArrowRight } from '@lucide/svelte';
 	import type { RemoteFormIssue } from '$app/server';
+	import { page } from '$app/state';
 	import { getLocale } from '#lib/paraglide/runtime';
 	import { getSiteContact, submitContactForm } from '#lib/remote/site.remote';
+	import Seo from '#lib/components/Seo.svelte';
 	import TurnstileWidget from '#lib/components/TurnstileWidget.svelte';
 	import { telHref } from '#lib/format';
+	import { metaDescription, ogImageHref, pageTitle } from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
+
+	const locale = getLocale();
 
 	// The heading, the intro and every label on this page are admin-editable, so
 	// they come from the database rather than the message catalogue.
-	const contact = await getSiteContact(getLocale());
+	const contact = await getSiteContact(locale);
 
 	// Those settings start out empty, and an empty heading is worse than a generic
 	// one: each falls back to the catalogue, and anything with nothing behind it
 	// is left out entirely rather than rendered as a blank shell.
-	const pageTitle = contact.pageTitle || m.nav_contact();
+	const heading = contact.pageTitle || m.nav_contact();
 	const phonesHeading = contact.phonesHeading || m.contact_phones_heading();
 	const addressHeading = contact.addressHeading || m.contact_address_heading();
 	const formHeading = contact.formHeading || m.contact_form_heading();
@@ -70,17 +75,19 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{pageTitle} - {m.site_name()}</title>
-	<meta name="description" content={contact.pageIntro || m.site_description()} />
-</svelte:head>
+<Seo
+	title={pageTitle(heading)}
+	description={metaDescription(contact.pageIntro || m.site_description())}
+	path="/contact"
+	image={ogImageHref(page.url.origin, locale, 'contact', contact.updatedAt)}
+/>
 
 <!-- Header band ------------------------------------------------------------->
 <section class="border-b-4 border-red bg-blue px-6 pt-16 pb-12">
 	<div class="mx-auto max-w-225">
 		<div class="section-rule bg-red"></div>
 		<h1 class="mb-4 text-page font-bold text-paper">
-			{pageTitle}
+			{heading}
 		</h1>
 		{#if contact.pageIntro}
 			<p class="max-w-145 text-body-lg leading-body text-paper/80">
@@ -202,7 +209,7 @@
 				</div>
 			{:else}
 				<form {...submitContactForm} class="flex flex-col gap-4">
-					<input {...fields.locale.as('hidden', getLocale())} />
+					<input {...fields.locale.as('hidden', locale)} />
 
 					<div>
 						<label class="eyebrow mb-chip block text-note text-paper/60" for="contact-name">

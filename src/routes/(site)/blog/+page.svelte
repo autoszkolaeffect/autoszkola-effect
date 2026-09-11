@@ -3,8 +3,10 @@
 	import { page } from '$app/state';
 	import { getLocale, localizeHref } from '#lib/paraglide/runtime';
 	import { listBlogCategories, listBlogPosts } from '#lib/remote/site.remote';
+	import Seo from '#lib/components/Seo.svelte';
 	import { accentClasses } from '#lib/accents';
 	import { formatLongDate } from '#lib/format';
+	import { metaDescription, ogImageHref, pageTitle } from '#lib/seo';
 	import * as m from '#lib/paraglide/messages';
 
 	// Polish query parameter, for the same reason the routes are Polish.
@@ -44,10 +46,14 @@
 			: 'border-white/25 bg-transparent font-normal text-paper/70';
 </script>
 
-<svelte:head>
-	<title>{m.blog_title()} - {m.site_name()}</title>
-	<meta name="description" content={m.blog_intro()} />
-</svelte:head>
+<!-- The canonical is the bare list: a `?category=` view is the same page with
+     fewer cards, not a page of its own. -->
+<Seo
+	title={pageTitle(m.blog_title())}
+	description={metaDescription(m.blog_intro())}
+	path="/blog"
+	image={ogImageHref(page.url.origin, locale, 'blog')}
+/>
 
 <!-- Header band, with the filter chips inside it ---------------------------->
 <section class="border-b-4 border-yellow bg-blue px-6 pt-16 pb-12">

@@ -128,6 +128,17 @@
 		line-height: 1.7;
 	}
 
+	/* The text in the "write" tab is not the textarea - that one is transparent -
+	   but shiki's highlighted copy layered underneath it. Carta asks shiki for a
+	   light/dark pair, and shiki paints the light colours inline while carrying
+	   the dark ones only in `--shiki-dark`, expecting a `.dark` ancestor to swap
+	   them in. The panel has no light mode, so the swap is unconditional here.
+	   `!important` is the documented way past the inline styles. */
+	.markdown-editor :global(.carta-highlight .shiki),
+	.markdown-editor :global(.carta-highlight .shiki span) {
+		color: var(--shiki-dark) !important;
+	}
+
 	/* The preview is the same rendered-markdown look the article page uses. */
 	.markdown-editor :global(.carta-renderer) {
 		color: rgba(250, 250, 250, 0.82);
