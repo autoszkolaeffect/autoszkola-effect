@@ -114,6 +114,8 @@
 	"admin_login_intro": "Zaloguj się, aby zarządzać treścią strony.",
 	"admin_login_email": "E-mail",
 	"admin_login_password": "Hasło",
+	"admin_login_password_show": "Pokaż hasło",
+	"admin_login_password_hide": "Ukryj hasło",
 	"admin_login_submit": "Zaloguj się",
 	"admin_login_pending": "Logowanie...",
 	"admin_login_failed": "Nieprawidłowy e-mail lub hasło.",
