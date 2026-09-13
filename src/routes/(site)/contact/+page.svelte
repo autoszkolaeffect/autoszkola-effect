@@ -203,7 +203,7 @@
 					<p class="mb-6 text-body leading-body text-paper/85">
 						{m.contact_form_success_body({ phone: contact.primaryPhone?.number ?? '' })}
 					</p>
-					<button type="button" onclick={sendAnother} class="btn btn-ghost">
+					<button type="button" onclick={sendAnother} class="btn btn-ghost cursor-pointer">
 						{m.contact_form_send_another()}
 					</button>
 				</div>

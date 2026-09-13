@@ -1,5 +1,7 @@
 {
 	"files.associations": {
 		"*.css": "tailwindcss"
-	}
+	},
+	"nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
+	"nixEnvSelector.useFlakes": false
 }

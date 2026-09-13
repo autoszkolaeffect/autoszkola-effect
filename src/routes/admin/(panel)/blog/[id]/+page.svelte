@@ -281,7 +281,7 @@
 			</AdminCard>
 
 			<div class="flex flex-wrap items-center gap-4">
-				<button type="submit" class="btn btn-red px-8 py-3" disabled={pending}>
+				<button type="submit" class="btn btn-red px-8 py-3 cursor-pointer" disabled={pending}>
 					{pending ? m.admin_saving() : m.admin_save()}
 				</button>
 

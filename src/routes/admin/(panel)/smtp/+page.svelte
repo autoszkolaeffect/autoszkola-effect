@@ -64,7 +64,7 @@
 			<label class="flex items-start gap-3">
 				<input
 					{...fields.enabled.as('checkbox', smtp.enabled)}
-					class="mt-nudge size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0"
+					class="mt-nudge size-4 shrink-0 cursor-pointer rounded-none border border-white/20 bg-navy text-red focus:ring-0"
 				/>
 				<span class="text-body leading-normal text-paper">{m.admin_smtp_enabled()}</span>
 			</label>
@@ -112,7 +112,7 @@
 					<label class="flex items-start gap-3">
 						<input
 							{...fields.secure.as('checkbox', smtp.secure)}
-							class="mt-nudge size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0"
+							class="mt-nudge size-4 shrink-0 rounded-none border border-white/20 bg-navy text-red focus:ring-0 cursor-pointer"
 						/>
 						<span class="text-body leading-normal text-paper">{m.admin_smtp_secure()}</span>
 					</label>
@@ -197,7 +197,7 @@
 		</AdminCard>
 
 		<div class="flex flex-wrap items-center gap-4">
-			<button type="submit" class="btn btn-red" disabled={saving}>
+			<button type="submit" class="btn btn-red cursor-pointer" disabled={saving}>
 				{saving ? m.admin_saving() : m.admin_save()}
 			</button>
 

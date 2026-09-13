@@ -87,6 +87,9 @@
 			total: instructors.length
 		});
 	}
+
+	const arrowClass =
+		'inline-flex items-center justify-center border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30 cursor-pointer';
 </script>
 
 <AdminPage title={m.admin_instructors_title()} intro={m.admin_instructors_intro()}>
@@ -180,7 +183,7 @@
 										disabled={index === 0}
 										aria-label={m.admin_move_up()}
 										title={m.admin_move_up()}
-										class="inline-flex items-center justify-center border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
+										class={arrowClass}
 									>
 										<ArrowUp class="size-4" aria-hidden="true" />
 									</button>
@@ -191,7 +194,7 @@
 										disabled={index === instructors.length - 1}
 										aria-label={m.admin_move_down()}
 										title={m.admin_move_down()}
-										class="inline-flex items-center justify-center border border-white/20 px-tag py-1 text-paper/75 transition-colors hover:border-yellow hover:text-yellow disabled:cursor-not-allowed disabled:opacity-30"
+										class={arrowClass}
 									>
 										<ArrowDown class="size-4" aria-hidden="true" />
 									</button>

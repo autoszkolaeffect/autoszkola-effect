@@ -98,7 +98,7 @@
 				</p>
 
 				<form method="POST" action={signOutAction} class="mt-3">
-					<button type="submit" class="text-meta text-yellow underline underline-offset-4">
+					<button type="submit" class="text-meta text-yellow underline underline-offset-4 cursor-pointer">
 						{m.admin_sign_out()}
 					</button>
 				</form>

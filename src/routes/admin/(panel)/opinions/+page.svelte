@@ -50,7 +50,7 @@
 		value !== undefined && value >= 0 && value <= 5 ? value : stored;
 
 	const arrowClass =
-		'flex h-9 w-9 items-center justify-center border-2 border-yellow/60 text-yellow transition-colors hover:border-yellow disabled:opacity-35';
+		'flex h-9 w-9 items-center justify-center border-2 border-yellow/60 text-yellow transition-colors hover:border-yellow disabled:opacity-35 cursor-pointer';
 
 	// A command rejects on an expired session or a dropped connection, and the
 	// reorder and delete buttons are the only place on this screen where nothing
@@ -76,7 +76,7 @@
 
 <AdminPage title={m.admin_opinions_title()} intro={m.admin_opinions_intro()}>
 	{#snippet actions()}
-		<button type="button" class="btn btn-yellow" onclick={() => (creating = !creating)}>
+		<button type="button" class="btn btn-yellow cursor-pointer" onclick={() => (creating = !creating)}>
 			{creating ? m.admin_cancel() : m.admin_opinions_new()}
 		</button>
 	{/snippet}
@@ -210,7 +210,7 @@
 
 					<label class="flex items-center gap-2 pb-cozy text-excerpt text-paper/80">
 						<input
-							class="size-4 rounded-none border-white/25 bg-navy text-yellow"
+							class="size-4 rounded-none border-white/25 bg-navy text-yellow cursor-pointer"
 							{...fields.published.as('checkbox', row.published)}
 						/>
 						{m.admin_visible()}
@@ -222,7 +222,7 @@
 						<span class="text-meta text-yellow" role="status">{m.admin_saved()}</span>
 					{/if}
 
-					<button type="submit" class="btn btn-yellow px-6 py-tag text-label" disabled={pending}>
+					<button type="submit" class="btn btn-yellow px-6 py-tag text-label cursor-pointer" disabled={pending}>
 						{pending ? m.admin_saving() : m.admin_save()}
 					</button>
 

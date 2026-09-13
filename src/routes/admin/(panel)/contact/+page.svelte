@@ -138,10 +138,10 @@
 	}
 
 	const rowButton =
-		'inline-flex items-center justify-center border-2 border-white/25 px-tag py-1 text-label leading-none text-paper/75 transition-colors hover:border-white/50 hover:text-paper disabled:opacity-35';
+		'inline-flex items-center justify-center border-2 border-white/25 px-tag py-1 text-label leading-none text-paper/75 transition-colors hover:border-white/50 hover:text-paper disabled:opacity-35 cursor-pointer';
 	const dangerButton =
-		'border-2 border-red px-3 py-1 text-meta leading-none text-paper transition-colors hover:bg-red';
-	const rowSubmit = 'btn btn-red px-5 py-2 text-caption';
+		'border-2 border-red px-3 py-1 text-meta leading-none text-paper transition-colors hover:bg-red cursor-pointer';
+	const rowSubmit = 'btn btn-red px-5 py-2 text-caption cursor-pointer';
 </script>
 
 <AdminPage title={m.admin_contact_title()} intro={m.admin_contact_intro()}>
@@ -228,7 +228,7 @@
 			</AdminCard>
 
 			<div class="flex flex-wrap items-center gap-4">
-				<button type="submit" class="btn btn-red" disabled={savingSettings}>
+				<button type="submit" class="btn btn-red cursor-pointer" disabled={savingSettings}>
 					{savingSettings ? m.admin_saving() : m.admin_save()}
 				</button>
 

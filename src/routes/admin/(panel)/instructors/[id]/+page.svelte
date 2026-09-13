@@ -393,7 +393,7 @@
 			<label class="flex cursor-pointer items-center gap-3 text-label text-paper/85">
 				<input
 					{...fields.published.as('checkbox', instructor?.published ?? true)}
-					class="size-4 border-white/25 bg-navy text-yellow"
+					class="size-4 border-white/25 bg-navy text-yellow cursor-pointer"
 				/>
 				{m.admin_visible()}
 			</label>
@@ -410,7 +410,7 @@
 					</button>
 				{/if}
 
-				<button type="submit" disabled={saving} class="btn btn-yellow py-3">
+				<button type="submit" disabled={saving} class="btn btn-yellow py-3 cursor-pointer">
 					{saving ? m.admin_saving() : m.admin_save()}
 				</button>
 			</div>

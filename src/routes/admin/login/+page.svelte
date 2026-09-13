@@ -83,7 +83,7 @@
 					/>
 				</div>
 
-				<button type="submit" class="btn btn-red mt-1" disabled={pending}>
+				<button type="submit" class="btn btn-red mt-1 cursor-pointer" disabled={pending}>
 					{pending ? m.admin_login_pending() : m.admin_login_submit()}
 				</button>
 			</form>
